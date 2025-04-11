@@ -1,3 +1,3 @@
 export default function NewCred() {
-  return <div>New credential</div>
+    return <div>New credential</div>
 }
