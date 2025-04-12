@@ -1,15 +1,19 @@
 import type { Metadata } from "next"
-import { Lato, Roboto } from "next/font/google"
+import { Open_Sans, Inter } from "next/font/google"
 import "./globals.css"
 import Navbar from "@/components/Navbar"
 import { ThemeProvider } from "@/components/ThemeProvider"
 import { ClerkProvider } from "@clerk/nextjs"
 
-const lato = Lato({
+const openSans = Open_Sans({
     weight: ["400"],
+    subsets: ["latin"],
 })
 
-const roboto = Roboto({ weight: ["400"] })
+const inter = Inter({
+    weight: ["400"],
+    subsets: ["latin"],
+})
 
 export const metadata: Metadata = {
     title: "SecureSave",
@@ -24,7 +28,7 @@ export default function RootLayout({
     return (
         <ClerkProvider>
             <html lang="en" suppressHydrationWarning>
-                <body className={`${roboto.className} antialiased`}>
+                <body className={`${openSans.className} antialiased`}>
                     <ThemeProvider
                         attribute="class"
                         defaultTheme="system"

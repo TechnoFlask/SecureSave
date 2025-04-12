@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -43,8 +43,12 @@ export function CredsTableFilters() {
 
     return (
         <Card className="w-3xs">
+            <CardHeader>
+                <CardTitle className="text-xl font-semibold text-center">
+                    Filters
+                </CardTitle>
+            </CardHeader>
             <CardContent className="flex flex-col gap-2 items-center">
-                <p className="text-xl font-semibold mb-2">Filters</p>
                 <div className="flex justify-center items-center gap-3">
                     <FaSearch size={20} />
                     <Input

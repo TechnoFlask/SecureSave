@@ -32,8 +32,6 @@ function TableCore({ creds }: { creds: PassType[] | CardType[] }) {
     const date = searchParams.get("date")
     const range = searchParams.get("range")
 
-    console.log(date)
-
     let showable: typeof creds
 
     if (name == null || name === "") showable = creds
@@ -56,7 +54,7 @@ function TableCore({ creds }: { creds: PassType[] | CardType[] }) {
 
             if (range === "before") return refDate < filterDate
             else if (range === "after") return refDate > filterDate
-            else return true
+            else return refDate.getTime() === filterDate.getTime()
         })
 
     return (
@@ -78,6 +76,7 @@ function TableCore({ creds }: { creds: PassType[] | CardType[] }) {
                 {dateFilteredShowable.map((cred) => (
                     <TableRow key={cred.id}>
                         <TableCell className="text-lg text-center font-medium">
+                            {/* {cred.desc} */}
                             {truncateOrPad(cred.desc, 10)}
                         </TableCell>
                         <TableCell className="text-lg text-center font-medium">
