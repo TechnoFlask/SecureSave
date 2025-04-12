@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import { CardFunctions } from "./card-functions"
+import { CardType, PassType } from "../types"
 
 const HiddenCred = ({
     length = 16,
@@ -23,7 +24,7 @@ const HiddenCred = ({
     return (
         <div
             className={cn(
-                "inline-flex justify-center items-center gap-1 p-2 bg-muted relative rounded-md drop-shadow-md drop-shadow-accent-foreground/40",
+                "inline-flex justify-center items-center gap-1 p-2 bg-muted relative rounded-md",
                 className
             )}
         >
@@ -34,37 +35,26 @@ const HiddenCred = ({
     )
 }
 
-export function PasswordCard({
-    pass,
-}: {
-    pass: {
-        desc: string
-        createdAt: Date
-    }
-}) {
+export function PasswordCard({ pass }: { pass: PassType }) {
     return (
-        <Card className="w-2xs xl:w-xs drop-shadow-lg drop-shadow-accent-foreground/40">
+        <Card className="w-2xs xl:w-xs">
             <CardHeader>
                 <CardTitle className="flex justify-between">
-                    <span className="drop-shadow-md drop-shadow-accent-foreground/40">
-                        {pass.desc}
-                    </span>
+                    <span className="">{pass.desc}</span>
                     <CardFunctions />
                 </CardTitle>
-                <CardDescription className="drop-shadow-md drop-shadow-accent-foreground/40">
+                <CardDescription className="">
                     {pass.createdAt.toLocaleString()}
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
                 <div className="space-x-3">
-                    <span className="drop-shadow-md drop-shadow-accent-foreground/40">
-                        Password
-                    </span>
+                    <span className="">Password</span>
                     <HiddenCred length={17} />
                 </div>
             </CardContent>
             <CardFooter className="flex justify-end">
-                <p className="text-muted-foreground text-center drop-shadow-md drop-shadow-accent-foreground/40">
+                <p className="text-muted-foreground text-center ">
                     Protected by SecureSave
                 </p>
             </CardFooter>
@@ -72,48 +62,34 @@ export function PasswordCard({
     )
 }
 
-export function CardsCard({
-    card,
-}: {
-    card: Record<"desc" | "holderName" | "cardNumber" | "cvv", string> & {
-        createdAt: Date
-    }
-}) {
+export function CardsCard({ card }: { card: CardType }) {
     return (
-        <Card className="w-2xs xl:w-xs drop-shadow-lg drop-shadow-accent-foreground/40">
+        <Card className="w-2xs xl:w-xs">
             <CardHeader>
                 <CardTitle className="flex justify-between">
-                    <span className="drop-shadow-md drop-shadow-accent-foreground/40">
-                        {card.desc}
-                    </span>
+                    <span className="">{card.desc}</span>
                     <CardFunctions />
                 </CardTitle>
-                <CardDescription className="drop-shadow-md drop-shadow-accent-foreground/40">
+                <CardDescription className="">
                     {card.createdAt.toLocaleString()}
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
                 <div className="space-x-3">
-                    <span className="drop-shadow-md drop-shadow-accent-foreground/40">
-                        Holder Name
-                    </span>
+                    <span className="">Holder Name</span>
                     <HiddenCred length={14} />
                 </div>
                 <div className="space-x-3">
-                    <span className="drop-shadow-md drop-shadow-accent-foreground/40">
-                        Card Number
-                    </span>
+                    <span className="">Card Number</span>
                     <HiddenCred length={14} />
                 </div>
                 <div className="space-x-3">
-                    <span className="drop-shadow-md drop-shadow-accent-foreground/40">
-                        CVV
-                    </span>
+                    <span className="">CVV</span>
                     <HiddenCred length={10} />
                 </div>
             </CardContent>
             <CardFooter className="flex justify-end">
-                <p className="text-muted-foreground text-center drop-shadow-md drop-shadow-accent-foreground/40">
+                <p className="text-muted-foreground text-center">
                     Protected by SecureSave
                 </p>
             </CardFooter>

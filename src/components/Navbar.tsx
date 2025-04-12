@@ -160,7 +160,7 @@ function BigNav() {
 export default function Navbar() {
     return (
         <>
-            <BigNav />
+            {/* <BigNav /> */}
             <SmallNav />
         </>
     )
