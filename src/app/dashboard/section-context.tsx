@@ -22,59 +22,59 @@ export function DashboardContextProvider({
     const [currentSection, setCurrentSection] = useState<"passwords" | "cards">(
         "passwords"
     )
-    const [passwords, setPasswords] = useState([
-        { id: 1, desc: "Gmail", createdAt: new Date() },
-        { id: 2, desc: "Yahoo", createdAt: new Date() },
-        {
-            id: 3,
-            desc: "Amazonfwaefawe",
-            createdAt: new Date(),
-        },
-        { id: 4, desc: "Amazon", createdAt: new Date() },
-        { id: 5, desc: "Amazon", createdAt: new Date() },
+    const [passwords, setPasswords] = useState<PassType[]>([
+        // { id: 1, desc: "Gmail", createdAt: new Date() },
+        // { id: 2, desc: "Yahoo", createdAt: new Date() },
+        // {
+        //     id: 3,
+        //     desc: "Amazonfwaefawe",
+        //     createdAt: new Date(),
+        // },
+        // { id: 4, desc: "Amazon", createdAt: new Date() },
+        // { id: 5, desc: "Amazon", createdAt: new Date() },
     ])
 
-    const [cards, setCards] = useState([
-        {
-            id: 1,
-            desc: "Primary card",
-            holderName: "Anish",
-            cardNumber: "123456789012345",
-            cvv: "123",
-            createdAt: new Date(),
-        },
-        {
-            id: 2,
-            desc: "Primary card",
-            holderName: "Anish",
-            cardNumber: "123456789012345",
-            cvv: "123",
-            createdAt: new Date(),
-        },
-        {
-            id: 3,
-            desc: "Primary card",
-            holderName: "Anish",
-            cardNumber: "123456789012345",
-            cvv: "123",
-            createdAt: new Date(),
-        },
-        {
-            id: 4,
-            desc: "Primary card",
-            holderName: "Anish",
-            cardNumber: "123456789012345",
-            cvv: "123",
-            createdAt: new Date(),
-        },
-        {
-            id: 5,
-            desc: "Primary card",
-            holderName: "Anish",
-            cardNumber: "123456789012345",
-            cvv: "123",
-            createdAt: new Date(),
-        },
+    const [cards, setCards] = useState<CardType[]>([
+        // {
+        //     id: 1,
+        //     desc: "Primary card",
+        //     holderName: "Anish",
+        //     cardNumber: "123456789012345",
+        //     cvv: "123",
+        //     createdAt: new Date(),
+        // },
+        // {
+        //     id: 2,
+        //     desc: "Primary card",
+        //     holderName: "Anish",
+        //     cardNumber: "123456789012345",
+        //     cvv: "123",
+        //     createdAt: new Date(),
+        // },
+        // {
+        //     id: 3,
+        //     desc: "Primary card",
+        //     holderName: "Anish",
+        //     cardNumber: "123456789012345",
+        //     cvv: "123",
+        //     createdAt: new Date(),
+        // },
+        // {
+        //     id: 4,
+        //     desc: "Primary card",
+        //     holderName: "Anish",
+        //     cardNumber: "123456789012345",
+        //     cvv: "123",
+        //     createdAt: new Date(),
+        // },
+        // {
+        //     id: 5,
+        //     desc: "Primary card",
+        //     holderName: "Anish",
+        //     cardNumber: "123456789012345",
+        //     cvv: "123",
+        //     createdAt: new Date(),
+        // },
     ])
 
     return (

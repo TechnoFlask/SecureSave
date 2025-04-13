@@ -9,9 +9,9 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { useSectionContext } from "../section-context"
-import { CardType, PassType } from "../types"
+import { CardType, CommonCredType, PassType } from "../types"
 import { Card, CardContent } from "@/components/ui/card"
-import { CardFunctions } from "./card-functions"
+import { CardActions } from "./card-actions"
 import { useSearchParams } from "next/navigation"
 
 function truncateOrPad(str: string, maxlength: number) {
@@ -26,24 +26,22 @@ function truncateOrPad(str: string, maxlength: number) {
     }
 }
 
-function TableCore({ creds }: { creds: PassType[] | CardType[] }) {
-    const searchParams = useSearchParams()
-    const name = searchParams.get("name")
-    const date = searchParams.get("date")
-    const range = searchParams.get("range")
+function filterCreds(
+    creds: CommonCredType[],
+    name: string | null,
+    date: string | null,
+    range: string | null
+) {
+    let filteredCreds: typeof creds
 
-    let showable: typeof creds
-
-    if (name == null || name === "") showable = creds
+    if (name == null || name === "") filteredCreds = creds
     else
-        showable = creds.filter((cred) =>
-            cred.desc.toLowerCase().includes(name?.toLowerCase())
+        filteredCreds = creds.filter((cred) =>
+            cred.name.toLowerCase().includes(name?.toLowerCase())
         )
 
-    let dateFilteredShowable = showable
-
     if (date != null && range != null)
-        dateFilteredShowable = showable.filter((cred) => {
+        filteredCreds = filteredCreds.filter((cred) => {
             let refDate = cred.createdAt
             refDate = new Date(
                 refDate.getFullYear(),
@@ -52,10 +50,22 @@ function TableCore({ creds }: { creds: PassType[] | CardType[] }) {
             )
             const filterDate = new Date(date)
 
-            if (range === "before") return refDate < filterDate
-            else if (range === "after") return refDate > filterDate
+            if (range === "Before") return refDate < filterDate
+            else if (range === "After") return refDate > filterDate
             else return refDate.getTime() === filterDate.getTime()
         })
+
+    return filteredCreds
+}
+
+function TableCore({ creds }: { creds: CommonCredType[] }) {
+    const searchParams = useSearchParams()
+    const name = searchParams.get("name")
+    const date = searchParams.get("date")
+    const range = searchParams.get("range")
+    const { currentSection } = useSectionContext()
+
+    const filteredCreds = filterCreds(creds, name, date, range)
 
     return (
         <Table>
@@ -73,17 +83,19 @@ function TableCore({ creds }: { creds: PassType[] | CardType[] }) {
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {dateFilteredShowable.map((cred) => (
+                {filteredCreds.map((cred) => (
                     <TableRow key={cred.id}>
                         <TableCell className="text-lg text-center font-medium">
-                            {/* {cred.desc} */}
-                            {truncateOrPad(cred.desc, 10)}
+                            {truncateOrPad(cred.name, 10)}
                         </TableCell>
                         <TableCell className="text-lg text-center font-medium">
                             {cred.createdAt.toLocaleString()}
                         </TableCell>
                         <TableCell className="grid place-items-center">
-                            <CardFunctions />
+                            <CardActions
+                                credId={cred.id}
+                                credType={currentSection}
+                            />
                         </TableCell>
                     </TableRow>
                 ))}
@@ -92,8 +104,16 @@ function TableCore({ creds }: { creds: PassType[] | CardType[] }) {
     )
 }
 
-export default function CredsTable() {
-    const { currentSection, passwords, cards } = useSectionContext()
+export function CredsTable({
+    creds,
+}: {
+    creds: {
+        passwords: PassType[]
+        cards: CardType[]
+    }
+}) {
+    const { currentSection } = useSectionContext()
+    const { cards, passwords } = creds
 
     return (
         <Card className="w-full">

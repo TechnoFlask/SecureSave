@@ -1,9 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { useState } from "react"
 import { CardsCard, PasswordCard } from "./_components/card"
-import { CardType, PassType } from "./types"
 import { useSectionContext } from "./section-context"
 
 export function SmallDashboard() {
@@ -44,17 +42,5 @@ export function SmallDashboard() {
                 )}
             </div>
         </div>
-        // <div className="container mx-auto flex flex-col justify-around items-center xl:items-start pt-5 pb-10 gap-4 xl:flex-row">
-        //     <div className="space-y-3 xl:space-y-5 flex flex-col items-center">
-        //         <p className="text-2xl xl:text-3xl font-bold drop-shadow-lg drop-shadow-accent-foreground/40">
-        //             Saved Passwords
-        //         </p>
-        //     </div>
-        //     <div className="space-y-3 xl:space-y-5 flex flex-col items-center">
-        //         <p className="text-2xl xl:text-3xl font-bold drop-shadow-lg drop-shadow-accent-foreground/40">
-        //             Saved Cards
-        //         </p>
-        //     </div>
-        // </div>
     )
 }

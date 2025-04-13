@@ -1,14 +1,20 @@
-export type PassType = {
-    id: number
-    desc: string
-    createdAt: Date
+export type EncryptedPassType = {
+    username: string
+    password: string
 }
 
-export type CardType = {
-    id: number
-    desc: string
+export type EncryptedCardType = {
     holderName: string
     cardNumber: string
     cvv: string
+}
+
+export type CommonCredType = {
+    id: string
+    name: string
     createdAt: Date
 }
+
+export type PassType = EncryptedPassType & CommonCredType
+
+export type CardType = EncryptedCardType & CommonCredType

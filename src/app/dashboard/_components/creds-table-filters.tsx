@@ -19,7 +19,7 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover"
 import { usePathname, useSearchParams, useRouter } from "next/navigation"
-import { useCallback, useState } from "react"
+import { useCallback, useRef, useState } from "react"
 import { FaSearch, FaCalendarAlt } from "react-icons/fa"
 
 export function CredsTableFilters() {
@@ -27,7 +27,8 @@ export function CredsTableFilters() {
     const searchParams = useSearchParams()
     const pathname = usePathname()
     const [date, setDate] = useState<Date | undefined>(new Date())
-    const [range, setRange] = useState("before")
+    const [range, setRange] = useState("Before")
+    const nameSearchInputRef = useRef<HTMLInputElement>(null)
 
     const createQueryString = useCallback(
         (data: { name: string; value: string }[]) => {
@@ -54,15 +55,7 @@ export function CredsTableFilters() {
                     <Input
                         placeholder="Name"
                         className="placeholder:text-lg placeholder:text-left focus:text-lg"
-                        onChange={(e) =>
-                            router.push(
-                                pathname +
-                                    "?" +
-                                    createQueryString([
-                                        { name: "name", value: e.target.value },
-                                    ])
-                            )
-                        }
+                        ref={nameSearchInputRef}
                     />
                 </div>
                 <div className="w-full flex justify-between gap-3">
@@ -85,7 +78,7 @@ export function CredsTableFilters() {
                                 variant="outline"
                                 className="text-lg text-muted-foreground grow flex justify-start"
                             >
-                                <p className="-translate-x-1">Choose Range</p>
+                                <p className="-translate-x-1">Range({range})</p>
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-56">
@@ -95,13 +88,13 @@ export function CredsTableFilters() {
                                 value={range}
                                 onValueChange={setRange}
                             >
-                                <DropdownMenuRadioItem value="before">
+                                <DropdownMenuRadioItem value="Before">
                                     Before
                                 </DropdownMenuRadioItem>
-                                <DropdownMenuRadioItem value="after">
+                                <DropdownMenuRadioItem value="After">
                                     After
                                 </DropdownMenuRadioItem>
-                                <DropdownMenuRadioItem value="on">
+                                <DropdownMenuRadioItem value="On">
                                     On
                                 </DropdownMenuRadioItem>
                             </DropdownMenuRadioGroup>
@@ -109,15 +102,23 @@ export function CredsTableFilters() {
                     </DropdownMenu>
                 </div>
                 <Button
-                    className="text-lg w-full mt-2"
+                    className="text-lg w-full"
                     onClick={() => {
                         router.push(
                             pathname +
                                 "?" +
                                 createQueryString([
                                     {
+                                        name: "name",
+                                        value:
+                                            nameSearchInputRef.current?.value ??
+                                            "",
+                                    },
+                                    {
                                         name: "date",
-                                        value: date?.toISOString()!,
+                                        value:
+                                            date?.toISOString() ??
+                                            new Date().toISOString(),
                                     },
                                     { name: "range", value: range },
                                 ])
@@ -125,6 +126,18 @@ export function CredsTableFilters() {
                     }}
                 >
                     Filter
+                </Button>
+
+                <Button
+                    className="text-lg w-full"
+                    onClick={() => {
+                        nameSearchInputRef!.current!.value = ""
+                        setDate(new Date())
+                        setRange("Before")
+                        router.push(pathname)
+                    }}
+                >
+                    Clear Filters
                 </Button>
             </CardContent>
         </Card>

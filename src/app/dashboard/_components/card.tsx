@@ -7,7 +7,7 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
-import { CardFunctions } from "./card-functions"
+import { CardActions } from "./card-actions"
 import { CardType, PassType } from "../types"
 
 const HiddenCred = ({
@@ -40,8 +40,8 @@ export function PasswordCard({ pass }: { pass: PassType }) {
         <Card className="w-2xs xl:w-xs">
             <CardHeader>
                 <CardTitle className="flex justify-between">
-                    <span className="">{pass.desc}</span>
-                    <CardFunctions />
+                    <span className="">{pass.name}</span>
+                    <CardActions credId={pass.id} credType="passwords" />
                 </CardTitle>
                 <CardDescription className="">
                     {pass.createdAt.toLocaleString()}
@@ -67,8 +67,8 @@ export function CardsCard({ card }: { card: CardType }) {
         <Card className="w-2xs xl:w-xs">
             <CardHeader>
                 <CardTitle className="flex justify-between">
-                    <span className="">{card.desc}</span>
-                    <CardFunctions />
+                    <span className="">{card.name}</span>
+                    <CardActions credId={card.id} credType="cards" />
                 </CardTitle>
                 <CardDescription className="">
                     {card.createdAt.toLocaleString()}
