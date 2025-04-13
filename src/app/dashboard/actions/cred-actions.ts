@@ -2,14 +2,18 @@
 
 import { toByteArray } from "base64-js"
 import { decryptCred } from "./crypto-actions"
+import { EncryptedCardType, EncryptedPassType } from "../types"
 
-type CredType = "PASSWORD" | "CARD"
+type CredType = "passwords" | "cards"
 
-async function unlockCred(
+async function isCredUnlocked() {}
+
+export async function unlockCred(
     master_password: string,
     credId: string,
     credType: CredType
-) {
+): Promise<string | null> {
+    // ): Promise<EncryptedPassType | EncryptedCardType | null> {
     /*
      1. Database -> IV, encrypted cred, salt
      2. decrypt(master, IV, encrypted, salt) 
@@ -29,7 +33,14 @@ async function unlockCred(
         toByteArray(salt)
     )
 
-    return dec
+    if (dec == null) return null
+
+    // const parsed = JSON.parse(dec)
+    const parsed = dec
+
+    return parsed
+    // if (credType === "passwords") return parsed as EncryptedPassType
+    // else return parsed as EncryptedCardType
 }
 
 export async function copyClipboardCred(
