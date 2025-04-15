@@ -10,7 +10,8 @@ export async function BigDashboard() {
     const user = await currentUser()
 
     const creds = await getServerCreds()
-    if (creds.error != undefined) return <div>Something bad happened.....</div>
+    if (creds.error != undefined)
+        return <div>Failed to load credentials. Please try again later....</div>
 
     return (
         <div className="container mx-auto p-10 xl:p-0 flex gap-10 xl:justify-center xl:items-start">

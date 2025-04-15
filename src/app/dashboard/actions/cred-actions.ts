@@ -3,6 +3,9 @@
 import { toByteArray } from "base64-js"
 import { decryptCred } from "./crypto-actions"
 import { EncryptedCardType, EncryptedPassType } from "../types"
+import { cardsTable, passwordsTable } from "@/db/schema"
+import { db } from "@/db"
+import { eq } from "drizzle-orm"
 
 type CredType = "passwords" | "cards"
 
@@ -59,4 +62,18 @@ export async function deleteCred(
     master_password: string,
     credId: string,
     credType: CredType
-) {}
+) {
+    const cred = await unlockCred(master_password, credId, credType)
+
+    if (cred == null) return null
+
+    const table = credType === "passwords" ? passwordsTable : cardsTable
+
+    try {
+        await db.delete(table).where(eq(table.id, credId))
+
+        return { success: true }
+    } catch (_) {
+        return { error: "Unexpected error happened while deleting credential" }
+    }
+}
