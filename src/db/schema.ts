@@ -2,17 +2,20 @@ import { pgTable, uuid, varchar, timestamp } from "drizzle-orm/pg-core"
 
 export const passwordsTable = pgTable("passwords", {
     id: uuid().primaryKey().defaultRandom(),
+    userId: varchar().notNull(),
     name: varchar().notNull(),
-    username: varchar().notNull(),
-    password: varchar().notNull(),
+    iv: varchar().notNull(),
+    enc: varchar().notNull(),
+    salt: varchar().notNull(),
     createdAt: timestamp().notNull().defaultNow(),
 })
 
 export const cardsTable = pgTable("cards", {
     id: uuid().primaryKey().defaultRandom(),
+    userId: varchar().notNull(),
     name: varchar().notNull(),
-    holderName: varchar().notNull(),
-    cardNumber: varchar().notNull(),
-    cvv: varchar().notNull(),
+    iv: varchar().notNull(),
+    enc: varchar().notNull(),
+    salt: varchar().notNull(),
     createdAt: timestamp().notNull().defaultNow(),
 })
