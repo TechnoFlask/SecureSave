@@ -1,5 +1,3 @@
-"use client"
-
 import {
     HoverCard,
     HoverCardContent,
@@ -33,18 +31,18 @@ export function CardActions({
 }) {
     return (
         <div className="flex gap-2 lg:gap-5">
-            <Hover prompt="Copy Credential to Clipboard">
-                <CopyCred credId={credId} credType={credType} />
-            </Hover>
-            <Hover prompt="Edit Credential">
-                <EditCred credId={credId} credType={credType} />
-            </Hover>
-            <Hover prompt="Share Credential">
-                <ShareCred credId={credId} credType={credType} />
-            </Hover>
-            <Hover prompt="Delete Credential">
-                <DeleteCred credId={credId} credType={credType} />
-            </Hover>
+            {/* <Hover prompt="Copy Credential to Clipboard"> */}
+            <CopyCred credId={credId} credType={credType} />
+            {/* </Hover> */}
+            {/* <Hover prompt="Edit Credential"> */}
+            <EditCred credId={credId} credType={credType} />
+            {/* </Hover> */}
+            {/* <Hover prompt="Share Credential"> */}
+            <ShareCred credId={credId} credType={credType} />
+            {/* </Hover> */}
+            {/* <Hover prompt="Delete Credential"> */}
+            <DeleteCred credId={credId} credType={credType} />
+            {/* </Hover> */}
         </div>
     )
 }

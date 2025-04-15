@@ -7,7 +7,7 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
-import { CardActions } from "./card-actions"
+import { CardActions } from "./card-action-buttons"
 import { CardType, PassType } from "../types"
 
 const HiddenCred = ({

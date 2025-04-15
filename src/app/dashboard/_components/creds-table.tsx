@@ -11,7 +11,7 @@ import {
 import { useSectionContext } from "../section-context"
 import { CardType, CommonCredType, PassType } from "../types"
 import { Card, CardContent } from "@/components/ui/card"
-import { CardActions } from "./card-actions"
+import { CardActions } from "./card-action-buttons"
 import { useSearchParams } from "next/navigation"
 
 function truncateOrPad(str: string, maxlength: number) {
