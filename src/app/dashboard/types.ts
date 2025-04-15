@@ -1,9 +1,21 @@
 export type EncryptedPassType = {
+    iv: string
+    enc: string
+    salt: string
+}
+
+export type UnEncryptedPassType = {
     username: string
     password: string
 }
 
 export type EncryptedCardType = {
+    iv: string
+    enc: string
+    salt: string
+}
+
+export type UnEncryptedCardType = {
     holderName: string
     cardNumber: string
     cvv: string
