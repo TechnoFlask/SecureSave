@@ -90,11 +90,14 @@ export async function addCred(
         }
     }
 }
+
 export async function deleteCred(
     master_password: string,
     credId: string,
     credType: CredType
 ) {
+    const { userId } = await auth()
+
     const cred = await unlockCred(master_password, credId, credType)
 
     if (cred == null) return null
@@ -102,10 +105,15 @@ export async function deleteCred(
     const table = credType === "passwords" ? passwordsTable : cardsTable
 
     try {
-        await db.delete(table).where(eq(table.id, credId))
+        await db
+            .delete(table)
+            .where(and(eq(table.id, credId), eq(table.userId, userId!)))
 
         return { success: true }
-    } catch (_) {
-        return { error: "Unexpected error happened while deleting credential" }
+    } catch (e) {
+        return {
+            error: "Unexpected error happened while deleting credential",
+            cause: (e as DrizzleError).cause,
+        }
     }
 }
