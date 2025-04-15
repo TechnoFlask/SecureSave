@@ -4,6 +4,7 @@ import "./globals.css"
 import Navbar from "@/components/Navbar"
 import { ThemeProvider } from "@/components/ThemeProvider"
 import { ClerkProvider } from "@clerk/nextjs"
+import { Toaster } from "sonner"
 
 const openSans = Open_Sans({
     weight: ["400"],
@@ -40,6 +41,7 @@ export default function RootLayout({
                         </header>
                         <main>{children}</main>
                         <footer></footer>
+                        <Toaster />
                     </ThemeProvider>
                 </body>
             </html>
