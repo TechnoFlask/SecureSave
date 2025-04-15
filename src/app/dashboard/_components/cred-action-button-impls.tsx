@@ -33,7 +33,7 @@ function DemandMasterPassword({
                     <AlertDialogTitle>
                         Please Enter your master password
                     </AlertDialogTitle>
-                    <AlertDialogDescription className="hidden"></AlertDialogDescription>
+                    <AlertDialogDescription className="hidden" />
                 </AlertDialogHeader>
                 <Input type="password" ref={inputRef} />
                 <AlertDialogFooter>
@@ -101,9 +101,11 @@ export function CopyCred({
         myToast.success("Copied to clipboard")
 
         if ("username" in cred) {
-            navigator.clipboard.writeText(`${cred.username} | ${cred.password}`)
+            await navigator.clipboard.writeText(
+                `${cred.username} | ${cred.password}`
+            )
         } else if ("holderName" in cred) {
-            navigator.clipboard.writeText(
+            await navigator.clipboard.writeText(
                 `${cred.holderName} | ${cred.cardNumber} | ${cred.cvv}`
             )
         }

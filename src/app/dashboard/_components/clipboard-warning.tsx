@@ -12,8 +12,8 @@ export function clipboardWarning(intervalId: NodeJS.Timeout) {
             <Button
                 className="border-red-400 text-red-400"
                 variant="outline"
-                onClick={() => {
-                    navigator.clipboard.writeText("")
+                onClick={async () => {
+                    await navigator.clipboard.writeText("")
                     myToast.dismiss(toastId)
                     myToast.success("Cleared clipboard")
                     clearInterval(intervalId)

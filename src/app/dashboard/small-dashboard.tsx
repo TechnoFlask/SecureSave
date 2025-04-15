@@ -3,10 +3,14 @@
 import { Button } from "@/components/ui/button"
 import { CardsCard, PasswordCard } from "./_components/card"
 import { useSectionContext } from "./section-context"
+import { CardType, PassType } from "./types"
 
-export function SmallDashboard() {
-    const { currentSection, setCurrentSection, passwords, cards } =
-        useSectionContext()
+export function SmallDashboard({
+    creds: { passwords, cards },
+}: {
+    creds: { passwords: PassType[]; cards: CardType[] }
+}) {
+    const { currentSection, setCurrentSection } = useSectionContext()
 
     return (
         <div className="h-screen flex flex-col items-center py-10 gap-5 overflow-hidden">

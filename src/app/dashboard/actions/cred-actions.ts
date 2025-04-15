@@ -2,20 +2,13 @@
 
 import { fromByteArray, toByteArray } from "base64-js"
 import { decryptCred, encryptCred } from "./crypto-actions"
-import {
-    EncryptedCardType,
-    EncryptedPassType,
-    UnEncryptedCardType,
-    UnEncryptedPassType,
-} from "../types"
+import { UnEncryptedCardType, UnEncryptedPassType } from "../types"
 import { cardsTable, passwordsTable } from "@/db/schema"
 import { db } from "@/db"
 import { and, DrizzleError, eq } from "drizzle-orm"
 import { auth } from "@clerk/nextjs/server"
 
 type CredType = "passwords" | "cards"
-
-async function isCredUnlocked() {}
 
 export async function unlockCred(
     master_password: string,
@@ -83,6 +76,8 @@ export async function addCred(
             salt: fromByteArray(salt),
             name,
         })
+
+        return { success: true }
     } catch (e) {
         return {
             error: "Unexpected error happened while adding credential",
