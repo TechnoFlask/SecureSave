@@ -59,6 +59,37 @@ export async function shareCred(
     credType: CredType
 ) {}
 
+export async function addCred(
+    master_password: string,
+    data: string,
+    credType: CredType,
+    name: string
+) {
+    const { userId } = await auth()
+
+    const encrypted_values = await encryptCred(master_password, data)
+
+    if (encrypted_values == null) return null
+
+    const { iv, enc, salt } = encrypted_values
+
+    const table = credType === "passwords" ? passwordsTable : cardsTable
+
+    try {
+        await db.insert(table).values({
+            userId: userId!,
+            iv: fromByteArray(iv),
+            enc: fromByteArray(enc),
+            salt: fromByteArray(salt),
+            name,
+        })
+    } catch (e) {
+        return {
+            error: "Unexpected error happened while adding credential",
+            cause: (e as DrizzleError).cause,
+        }
+    }
+}
 export async function deleteCred(
     master_password: string,
     credId: string,
