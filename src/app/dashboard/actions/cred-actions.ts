@@ -1,11 +1,17 @@
 "use server"
 
-import { toByteArray } from "base64-js"
-import { decryptCred } from "./crypto-actions"
-import { EncryptedCardType, EncryptedPassType } from "../types"
+import { fromByteArray, toByteArray } from "base64-js"
+import { decryptCred, encryptCred } from "./crypto-actions"
+import {
+    EncryptedCardType,
+    EncryptedPassType,
+    UnEncryptedCardType,
+    UnEncryptedPassType,
+} from "../types"
 import { cardsTable, passwordsTable } from "@/db/schema"
 import { db } from "@/db"
-import { eq } from "drizzle-orm"
+import { and, DrizzleError, eq } from "drizzle-orm"
+import { auth } from "@clerk/nextjs/server"
 
 type CredType = "passwords" | "cards"
 
@@ -15,19 +21,17 @@ export async function unlockCred(
     master_password: string,
     credId: string,
     credType: CredType
-): Promise<string | null> {
-    // ): Promise<EncryptedPassType | EncryptedCardType | null> {
-    /*
-     1. Database -> IV, encrypted cred, salt
-     2. decrypt(master, IV, encrypted, salt) 
-     3. success -> decrypt
-     4. failure -> null
-     */
+): Promise<UnEncryptedCardType | UnEncryptedPassType | null> {
+    const { userId } = await auth()
 
-    const iv = "26l9+npnhZKJSIBDBVwugQ=="
-    const enc =
-        "qloNZOmQi1jUkFrihlZh5QIplYhszNDS3fancugBIpvOe/hrSZg4uBZ3Y+5NCCHWf6jS"
-    const salt = "VPloGJ6r8DvPCf2jMpt2pj5Rqe1AaFFl0Ly67wLLGtk="
+    const table = credType === "passwords" ? passwordsTable : cardsTable
+
+    const { iv, enc, salt } = (
+        await db
+            .select()
+            .from(table)
+            .where(and(eq(table.id, credId), eq(table.userId, userId!)))
+    )[0]
 
     const dec = await decryptCred(
         master_password,
@@ -38,12 +42,9 @@ export async function unlockCred(
 
     if (dec == null) return null
 
-    // const parsed = JSON.parse(dec)
-    const parsed = dec
+    const parsed = JSON.parse(dec)
 
     return parsed
-    // if (credType === "passwords") return parsed as EncryptedPassType
-    // else return parsed as EncryptedCardType
 }
 
 export async function copyClipboardCred(
