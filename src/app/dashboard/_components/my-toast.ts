@@ -6,18 +6,24 @@ export const myToast = {
     ...toast,
     success: (message: titleT, data?: ExternalToast) =>
         toast.success(message, {
-            className: "!bg-green-600 !text-white !text-lg",
             ...data,
+            className: "!bg-green-600 !text-white !text-lg " + data?.className,
         }),
     error: (message: titleT, data?: ExternalToast) =>
         toast.error(message, {
-            className: "!bg-red-400 !text-white !text-lg",
             ...data,
+            className: "!bg-red-400 !text-white !text-lg " + data?.className,
         }),
 
     loading: (message: titleT, data?: ExternalToast) =>
         toast.loading(message, {
-            className: "!text-lg",
             ...data,
+            className: "!text-lg " + data?.className,
+        }),
+
+    message: (message: titleT, data?: ExternalToast) =>
+        toast.message(message, {
+            ...data,
+            className: "!text-lg " + data?.className,
         }),
 }

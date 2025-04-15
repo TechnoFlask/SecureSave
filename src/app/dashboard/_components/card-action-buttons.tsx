@@ -3,7 +3,7 @@ import {
     HoverCardContent,
     HoverCardTrigger,
 } from "@/components/ui/hover-card"
-import { CopyCred, DeleteCred, EditCred, ShareCred } from "./card-actions-impls"
+import { CopyCred, DeleteCred, EditCred, ShareCred } from "./card-action-impls"
 
 function Hover({
     children,

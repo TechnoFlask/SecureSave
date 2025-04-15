@@ -10,10 +10,13 @@ import {
     AlertDialogTitle,
     AlertDialogFooter,
     AlertDialogCancel,
+    AlertDialogDescription,
+    AlertDialogAction,
 } from "@/components/ui/alert-dialog"
 import { FaEdit } from "react-icons/fa"
 import { myToast } from "./my-toast"
 import { useRouter } from "next/navigation"
+import { clipboardWarning } from "./clipboard-warning"
 
 function DemandMasterPassword({
     children,
@@ -30,16 +33,17 @@ function DemandMasterPassword({
                     <AlertDialogTitle>
                         Please Enter your master password
                     </AlertDialogTitle>
+                    <AlertDialogDescription className="hidden"></AlertDialogDescription>
                 </AlertDialogHeader>
                 <Input type="password" ref={inputRef} />
                 <AlertDialogFooter>
-                    <AlertDialogCancel
+                    <AlertDialogAction
                         onClick={async () => {
                             await handleSubmit(inputRef.current?.value!)
                         }}
                     >
                         Go
-                    </AlertDialogCancel>
+                    </AlertDialogAction>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
                 </AlertDialogFooter>
             </AlertDialogContent>
@@ -95,7 +99,19 @@ export function CopyCred({
         }
 
         myToast.success("Copied to clipboard")
-        navigator.clipboard.writeText(cred)
+
+        if ("username" in cred) {
+            navigator.clipboard.writeText(`${cred.username} | ${cred.password}`)
+        } else if ("holderName" in cred) {
+            navigator.clipboard.writeText(
+                `${cred.holderName} | ${cred.cardNumber} | ${cred.cvv}`
+            )
+        }
+
+        // Clear clipboard
+        const intervalId = setInterval(() => {
+            clipboardWarning(intervalId)
+        }, 90000)
     }
 
     return (
@@ -159,14 +175,12 @@ export function DeleteCred({
         const cred = await deleteCred(master_password, credId, credType)
 
         if (cred == null) {
-            console.log("bad pass")
             myToast.dismiss(toastId)
             myToast.error("Incorrect Unlock Credentials")
             return
         }
 
         if (cred.success == undefined) {
-            console.log("failed delete")
             myToast.dismiss(toastId)
             myToast.error("Failed to delete the credential")
             return
