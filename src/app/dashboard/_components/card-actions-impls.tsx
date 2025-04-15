@@ -1,6 +1,6 @@
 import { cloneElement, useRef, useState } from "react"
 import { FaClipboard, FaShareFromSquare, FaTrashCan } from "react-icons/fa6"
-import { unlockCred } from "../actions/cred-actions"
+import { deleteCred, unlockCred } from "../actions/cred-actions"
 
 import { Input } from "@/components/ui/input"
 import {
@@ -12,6 +12,8 @@ import {
     AlertDialogCancel,
 } from "@/components/ui/alert-dialog"
 import { FaEdit } from "react-icons/fa"
+import { myToast } from "./my-toast"
+import { useRouter } from "next/navigation"
 
 function DemandMasterPassword({
     children,
@@ -83,12 +85,16 @@ export function CopyCred({
     credType: "passwords" | "cards"
 }) {
     async function handleSubmit(master_password: string) {
+        const toastId = myToast.loading("Processing....")
         const cred = await unlockCred(master_password, credId, credType)
+        myToast.dismiss(toastId)
+
         if (cred == null) {
-            console.log("incorrect master password")
+            myToast.error("Incorrect Unlock Credentials")
             return
         }
 
+        myToast.success("Copied to clipboard")
         navigator.clipboard.writeText(cred)
     }
 
@@ -147,7 +153,29 @@ export function DeleteCred({
     credId: string
     credType: "passwords" | "cards"
 }) {
-    async function handleSubmit(master_password: string) {}
+    const router = useRouter()
+    async function handleSubmit(master_password: string) {
+        const toastId = myToast.loading("Processing....")
+        const cred = await deleteCred(master_password, credId, credType)
+
+        if (cred == null) {
+            console.log("bad pass")
+            myToast.dismiss(toastId)
+            myToast.error("Incorrect Unlock Credentials")
+            return
+        }
+
+        if (cred.success == undefined) {
+            console.log("failed delete")
+            myToast.dismiss(toastId)
+            myToast.error("Failed to delete the credential")
+            return
+        }
+
+        myToast.dismiss(toastId)
+        myToast.success("Successfully deleted the credential")
+        router.replace("/dashboard")
+    }
 
     return (
         <CardAction handleSubmit={handleSubmit}>
