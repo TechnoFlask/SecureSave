@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { FaPlus } from "react-icons/fa6"
 import { useSectionContext } from "../section-context"
 import { CardForm, PasswordForm } from "./forms"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import {
     AlertDialog,
     AlertDialogContent,
@@ -14,6 +14,7 @@ import {
     AlertDialogCancel,
     AlertDialogDescription,
 } from "@/components/ui/alert-dialog"
+import { cn } from "@/lib/utils"
 
 function AddCredDialog({
     setIsDialogOpen,
@@ -34,9 +35,9 @@ function AddCredDialog({
                     <AlertDialogDescription className="hidden" />
                 </AlertDialogHeader>
                 {currentSection === "cards" ? (
-                    <CardForm dialogClose={setIsDialogOpen} />
+                    <CardForm closeParentDialog={setIsDialogOpen} />
                 ) : (
-                    <PasswordForm dialogClose={setIsDialogOpen} />
+                    <PasswordForm closeParentDialog={setIsDialogOpen} />
                 )}
                 <AlertDialogFooter className="absolute bottom-0 right-0 -translate-x-10 -translate-y-8">
                     <AlertDialogCancel className="text-lg">
@@ -54,7 +55,9 @@ export function AddCredButton() {
 
     return (
         <>
-            <button>
+            <button
+                className={cn({ "opacity-0": currentSection === "shared" })}
+            >
                 <Card
                     className="cursor-pointer max-w-sm"
                     onClick={() => setIsDialogOpen(true)}

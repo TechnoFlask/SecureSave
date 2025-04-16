@@ -43,7 +43,7 @@ export function CredsTableFilters() {
     )
 
     return (
-        <Card className="w-3xs">
+        <Card className="w-3xs gap-1">
             <CardHeader>
                 <CardTitle className="text-xl font-semibold text-center">
                     Filters

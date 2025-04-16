@@ -30,3 +30,14 @@ export type CommonCredType = {
 export type PassType = EncryptedPassType & CommonCredType
 
 export type CardType = EncryptedCardType & CommonCredType
+
+export type SharedType = {
+    id: string
+    credType: "passwords" | "cards"
+    sender: string
+    recipient: string
+    iv: string
+    enc: string
+    salt: string
+    createdAt: Date
+}

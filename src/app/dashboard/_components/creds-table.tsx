@@ -9,7 +9,7 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { useSectionContext } from "../section-context"
-import { CardType, CommonCredType, PassType } from "../types"
+import { CardType, CommonCredType, PassType, SharedType } from "../types"
 import { Card, CardContent } from "@/components/ui/card"
 import { CardActions } from "./cred-action-buttons"
 import { useSearchParams } from "next/navigation"
@@ -94,7 +94,11 @@ function TableCore({ creds }: { creds: CommonCredType[] }) {
                         <TableCell className="grid place-items-center">
                             <CardActions
                                 credId={cred.id}
-                                credType={currentSection}
+                                credType={
+                                    currentSection !== "shared"
+                                        ? currentSection
+                                        : "passwords"
+                                }
                             />
                         </TableCell>
                     </TableRow>
@@ -110,18 +114,21 @@ export function CredsTable({
     creds: {
         passwords: PassType[]
         cards: CardType[]
+        shared: SharedType[]
     }
 }) {
     const { currentSection } = useSectionContext()
-    const { cards, passwords } = creds
+    const { cards, passwords, shared } = creds
 
     return (
         <Card className="w-full">
             <CardContent>
-                {currentSection === "passwords" ? (
+                {currentSection === "passwords" && (
                     <TableCore creds={passwords} />
-                ) : (
-                    <TableCore creds={cards} />
+                )}
+                {currentSection === "cards" && <TableCore creds={cards} />}
+                {currentSection === "shared" && (
+                    <pre>{JSON.stringify(shared, null, 4)}</pre>
                 )}
             </CardContent>
         </Card>

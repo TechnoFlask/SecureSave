@@ -4,7 +4,7 @@ import { AccountIsland } from "./_components/account-island"
 import { CredsTable } from "./_components/creds-table"
 import { CredsTableFilters } from "./_components/creds-table-filters"
 import { AddCredButton } from "./_components/add-cred-button"
-import { CardType, PassType } from "./types"
+import { CardType, PassType, SharedType } from "./types"
 
 export async function BigDashboard({
     creds,
@@ -12,6 +12,7 @@ export async function BigDashboard({
     creds: {
         passwords: PassType[]
         cards: CardType[]
+        shared: SharedType[]
     }
 }) {
     const user = await currentUser()

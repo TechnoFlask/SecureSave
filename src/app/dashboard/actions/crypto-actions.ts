@@ -2,7 +2,7 @@
 
 import argon2 from "argon2"
 
-function getRandomSalt(length: number) {
+export async function getRandomSalt(length: number) {
     return crypto.getRandomValues(new Uint8Array(length))
 }
 
@@ -26,7 +26,11 @@ export async function hashPassword(master_password: string, salt: Uint8Array) {
     }
 }
 
-export async function deriveKey(master_password: string, salt: Uint8Array) {
+export async function deriveKey(
+    master_password: string,
+    salt: Uint8Array,
+    extractable: boolean
+) {
     const hashed_pass = await hashPassword(master_password, salt)
 
     if (hashed_pass == null) return null
@@ -36,7 +40,7 @@ export async function deriveKey(master_password: string, salt: Uint8Array) {
             "raw",
             hashed_pass,
             { name: "AES-GCM", length: 256 },
-            false,
+            extractable,
             ["encrypt", "decrypt"]
         )
 
@@ -48,9 +52,33 @@ export async function deriveKey(master_password: string, salt: Uint8Array) {
     }
 }
 
+export async function deriveExtractedKey(
+    master_password: string,
+    salt: Uint8Array
+) {
+    const sharableCryptoKey = await deriveKey(master_password, salt, true)
+
+    console.log(sharableCryptoKey)
+
+    if (sharableCryptoKey == null) return null
+
+    try {
+        const extractedCryptoKey = await crypto.subtle.exportKey(
+            "jwk",
+            sharableCryptoKey
+        )
+
+        return extractedCryptoKey
+    } catch (e) {
+        console.error((e as Error).message)
+
+        return null
+    }
+}
+
 export async function encryptCred(master_password: string, data: string) {
-    const salt = getRandomSalt(32)
-    const cryptoKey = await deriveKey(master_password, salt)
+    const salt = await getRandomSalt(32)
+    const cryptoKey = await deriveKey(master_password, salt, false)
 
     if (cryptoKey == null) return null
 
@@ -76,7 +104,7 @@ export async function decryptCred(
     enc: Uint8Array,
     salt: Uint8Array
 ) {
-    const cryptoKey = await deriveKey(master_password, salt)
+    const cryptoKey = await deriveKey(master_password, salt, false)
 
     if (cryptoKey == null) return null
 

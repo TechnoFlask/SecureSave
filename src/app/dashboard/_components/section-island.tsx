@@ -31,7 +31,7 @@ export function SectionIsland() {
                 </div>
                 <div
                     className={cn(
-                        "flex items-center gap-3 cursor-pointer w-full p-2.5 rounded-bl-xl rounded-br-xl transition-colors duration-500",
+                        "flex items-center gap-3 cursor-pointer w-full p-2.5 transition-colors duration-500",
                         {
                             "bg-accent-foreground text-white":
                                 currentSection === "cards",
@@ -47,6 +47,27 @@ export function SectionIsland() {
                         })}
                     />
                     <span className="text-xl font-semibold">My Cards</span>
+                </div>
+                <div
+                    className={cn(
+                        "flex items-center gap-3 cursor-pointer w-full p-2.5 rounded-bl-xl rounded-br-xl transition-colors duration-500",
+                        {
+                            "bg-accent-foreground text-white":
+                                currentSection === "shared",
+                            "hover:bg-accent-foreground/10":
+                                currentSection !== "shared",
+                        }
+                    )}
+                    onClick={() => setCurrentSection("shared")}
+                >
+                    <FaKey
+                        className={cn({
+                            "text-white": currentSection === "shared",
+                        })}
+                    />
+                    <span className="text-xl font-semibold">
+                        Shared Credentials
+                    </span>
                 </div>
             </CardContent>
         </Card>

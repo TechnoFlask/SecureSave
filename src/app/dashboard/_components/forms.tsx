@@ -1,5 +1,3 @@
-"use client"
-
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { cardFormSchema, passwordFormSchema } from "../schema"
@@ -20,9 +18,9 @@ import { myToast } from "./my-toast"
 import { useRouter } from "next/navigation"
 
 export function PasswordForm({
-    dialogClose,
+    closeParentDialog,
 }: {
-    dialogClose: (setIs: boolean) => void
+    closeParentDialog: (setIs: boolean) => void
 }) {
     const [isPending, startTransition] = useTransition()
     const router = useRouter()
@@ -49,13 +47,7 @@ export function PasswordForm({
             values.name
         )
 
-        if (res == null) {
-            myToast.dismiss(toastId)
-            myToast.error("Failed to encrypt the given data")
-            return
-        }
-
-        if (res.success == undefined) {
+        if (res.success == false) {
             myToast.dismiss(toastId)
             myToast.error("Failed to create the credential")
             return
@@ -65,7 +57,7 @@ export function PasswordForm({
         myToast.success("Successfully created the credential")
         router.replace("/dashboard")
 
-        dialogClose(false)
+        closeParentDialog(false)
     }
 
     return (
@@ -125,6 +117,7 @@ export function PasswordForm({
                                 <Input
                                     className="placeholder:text-lg not-focus:text-base focus:text-lg"
                                     placeholder="Password"
+                                    type="password"
                                     {...field}
                                 />
                             </FormControl>
@@ -144,6 +137,7 @@ export function PasswordForm({
                                 <Input
                                     className="placeholder:text-lg not-focus:text-base focus:text-lg"
                                     placeholder="Master password"
+                                    type="password"
                                     {...field}
                                 />
                             </FormControl>
@@ -164,9 +158,9 @@ export function PasswordForm({
 }
 
 export function CardForm({
-    dialogClose,
+    closeParentDialog,
 }: {
-    dialogClose: (setIs: boolean) => void
+    closeParentDialog: (setIs: boolean) => void
 }) {
     const [isPending, startTransition] = useTransition()
     const router = useRouter()
@@ -195,13 +189,7 @@ export function CardForm({
             name
         )
 
-        if (res == null) {
-            myToast.dismiss(toastId)
-            myToast.error("Failed to encrypt the given data")
-            return
-        }
-
-        if (res.success == undefined) {
+        if (res.success == false) {
             myToast.dismiss(toastId)
             myToast.error("Failed to create the credential")
             return
@@ -210,7 +198,7 @@ export function CardForm({
         myToast.dismiss(toastId)
         myToast.success("Successfully created the credential")
         router.replace("/dashboard")
-        dialogClose(false)
+        closeParentDialog(false)
     }
 
     return (
@@ -310,6 +298,7 @@ export function CardForm({
                                 <Input
                                     className="placeholder:text-lg not-focus:text-base focus:text-lg"
                                     placeholder="Master password"
+                                    type="password"
                                     {...field}
                                 />
                             </FormControl>

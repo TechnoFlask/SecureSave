@@ -4,8 +4,8 @@ import { createContext, useContext, useState } from "react"
 import { CardType, PassType } from "./types"
 
 type DashboardContextType = {
-    currentSection: "passwords" | "cards"
-    setCurrentSection: (section: "passwords" | "cards") => void
+    currentSection: "passwords" | "cards" | "shared"
+    setCurrentSection: (section: "passwords" | "cards" | "shared") => void
 }
 
 const DashboardContext = createContext<DashboardContextType | null>(null)
@@ -15,9 +15,9 @@ export function DashboardContextProvider({
 }: {
     children: React.ReactNode
 }) {
-    const [currentSection, setCurrentSection] = useState<"passwords" | "cards">(
-        "passwords"
-    )
+    const [currentSection, setCurrentSection] = useState<
+        "passwords" | "cards" | "shared"
+    >("passwords")
 
     return (
         <DashboardContext.Provider
