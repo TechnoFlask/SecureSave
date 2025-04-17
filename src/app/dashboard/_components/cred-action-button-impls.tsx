@@ -5,6 +5,7 @@ import {
     createSharedCred,
     unlockCred,
     openSharedCred,
+    getEditableCred,
 } from "../actions/cred-actions"
 
 import { Input } from "@/components/ui/input"
@@ -24,6 +25,8 @@ import { useRouter } from "next/navigation"
 import { clipboardWarning } from "./clipboard-warning"
 import { Button } from "@/components/ui/button"
 import { UnEncryptedCardType, UnEncryptedPassType } from "../types"
+import { useSectionContext } from "../section-context"
+import { CardUpdateForm, PasswordUpdateForm } from "./forms"
 
 function DemandMasterPassword({
     children,
@@ -133,6 +136,85 @@ export function CopyCred({
     )
 }
 
+function EditCredDialog({
+    setIsDialogOpen,
+    credId,
+    initialData,
+    master_password,
+    children,
+    ...props
+}: React.ComponentProps<typeof AlertDialog> & {
+    credId: string
+    initialData: {
+        name: string
+        parsed: UnEncryptedCardType | UnEncryptedPassType
+    }
+    master_password: string
+    setIsDialogOpen: (setIs: boolean) => void
+}) {
+    const { currentSection } = useSectionContext()
+    return (
+        <AlertDialog {...props}>
+            <AlertDialogContent className="px-10 py-8">
+                <AlertDialogHeader>
+                    <AlertDialogTitle className="text-xl">
+                        Update your{" "}
+                        {currentSection === "passwords" ? "password" : "card"}
+                    </AlertDialogTitle>
+                    <AlertDialogDescription className="hidden" />
+                </AlertDialogHeader>
+                {currentSection === "cards" ? (
+                    <CardUpdateForm
+                        credId={credId}
+                        master_password={master_password}
+                        initialData={
+                            "cvv" in initialData.parsed
+                                ? {
+                                      name: initialData.name,
+                                      ...initialData.parsed,
+                                  }
+                                : {
+                                      name: "",
+                                      cardNumber: "",
+                                      cvv: "",
+                                      expiry: "",
+                                      holderName: "",
+                                  }
+                        }
+                        closeParentDialog={setIsDialogOpen}
+                    />
+                ) : (
+                    <PasswordUpdateForm
+                        credId={credId}
+                        master_password={master_password}
+                        initialData={
+                            "username" in initialData.parsed
+                                ? {
+                                      name: initialData.name,
+                                      ...initialData.parsed,
+                                  }
+                                : {
+                                      name: "",
+                                      password: "",
+                                      username: "",
+                                  }
+                        }
+                        closeParentDialog={setIsDialogOpen}
+                    />
+                )}
+                <AlertDialogFooter className="absolute bottom-0 right-0 -translate-x-10 -translate-y-8">
+                    <AlertDialogCancel
+                        className="text-lg"
+                        onClick={() => setIsDialogOpen(false)}
+                    >
+                        Cancel
+                    </AlertDialogCancel>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+    )
+}
+
 export function EditCred({
     credId,
     credType,
@@ -140,22 +222,53 @@ export function EditCred({
     credId: string
     credType: "passwords" | "cards"
 }) {
+    const [cred, setCred] = useState<{
+        name: string
+        parsed: UnEncryptedCardType | UnEncryptedPassType
+    }>({
+        name: "",
+        parsed: {
+            cardNumber: "",
+            cvv: "",
+            expiry: "",
+            holderName: "",
+            password: "",
+            username: "",
+        },
+    })
+    const [masterPass, setMasterPass] = useState("")
+    const [isDialogOpen, setIsDialogOpen] = useState(false)
+
     async function handleSubmit(master_password: string) {
-        console.log(
-            await openSharedCred(
-                "4e57b877-643a-42ab-8d65-49609e5d92a8",
-                "howdy"
-            )
-        )
+        const toastId = myToast.loading("Processing....")
+        const cred = await getEditableCred(master_password, credId, credType)
+        setMasterPass(master_password)
+
+        myToast.dismiss(toastId)
+        if (cred == null) {
+            myToast.error("Failed to unlock credential")
+            return
+        }
+        setCred(cred)
+        setIsDialogOpen(true)
     }
 
     return (
-        <CardAction handleSubmit={handleSubmit}>
-            <FaEdit
-                size={18}
-                className="cursor-pointer drop-shadow-lg drop-shadow-accent-foreground/40"
+        <>
+            <CardAction handleSubmit={handleSubmit}>
+                <FaEdit
+                    size={18}
+                    className="cursor-pointer drop-shadow-lg drop-shadow-accent-foreground/40"
+                />
+            </CardAction>
+            <EditCredDialog
+                credId={credId}
+                initialData={cred}
+                master_password={masterPass}
+                open={isDialogOpen}
+                setIsDialogOpen={setIsDialogOpen}
             />
-        </CardAction>
+        </>
     )
 }
 
@@ -166,7 +279,8 @@ export function ShareCred({
     credId: string
     credType: "passwords" | "cards"
 }) {
-    const inputRef = useRef<HTMLInputElement>(null)
+    const tempPassInputRef = useRef<HTMLInputElement>(null)
+    const recipientEmailInputRef = useRef<HTMLInputElement>(null)
     const [isTempPassDialogOpen, setIsTempPassDialogOpen] = useState(false)
     const [cred, setCred] = useState<
         UnEncryptedCardType | UnEncryptedPassType
@@ -204,7 +318,11 @@ export function ShareCred({
                             Enter a temporary sharable encryption password
                         </AlertDialogTitle>
                     </AlertDialogHeader>
-                    <Input type="password" ref={inputRef} />
+                    <Input type="password" ref={tempPassInputRef} />
+                    <div>
+                        <p className="font-semibold mb-3">Recipient email</p>
+                        <Input type="email" ref={recipientEmailInputRef} />
+                    </div>
                     <AlertDialogFooter>
                         <AlertDialogFooter>
                             <Button
@@ -214,7 +332,9 @@ export function ShareCred({
                                     const sharableId = await createSharedCred(
                                         cred!,
                                         credType,
-                                        inputRef.current!.value
+                                        credId,
+                                        tempPassInputRef.current!.value,
+                                        recipientEmailInputRef.current!.value
                                     )
 
                                     if (sharableId.success === false) {
@@ -228,6 +348,7 @@ export function ShareCred({
                                     await navigator.clipboard.writeText(
                                         sharableId.data as string
                                     )
+
                                     myToast.dismiss(toastId)
                                     myToast.success(
                                         <div>
@@ -270,7 +391,6 @@ export function DeleteCred({
     credId: string
     credType: "passwords" | "cards"
 }) {
-    const [isPending, startTransition] = useTransition()
     const router = useRouter()
     async function handleSubmit(master_password: string) {
         const toastId = myToast.loading("Processing....")

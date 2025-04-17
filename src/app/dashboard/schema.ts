@@ -71,5 +71,23 @@ export const cardFormSchema = zod
             .string()
             .trim()
             .regex(/^\d{3,4}$/, "CVV must be 3 or 4 digits"),
+        expiry: zod
+            .string()
+            .trim()
+            .regex(/^\d{2}\/\d{2}$/, "Expiry date must be in MM/YY format")
+            .refine(
+                (expiry) => {
+                    const [month, year] = expiry.split("/").map(Number)
+                    const currentDate = new Date()
+                    const currentYear = currentDate.getFullYear() % 100
+                    const currentMonth = currentDate.getMonth() + 1
+
+                    return (
+                        year > currentYear ||
+                        (year === currentYear && month >= currentMonth)
+                    )
+                },
+                { message: "Expiry date is in the past" }
+            ),
     })
     .merge(masterPasswordSchema)

@@ -1,13 +1,14 @@
 "use server"
 
 import { fromByteArray, toByteArray } from "base64-js"
-import { decryptCred, deriveExtractedKey, encryptCred } from "./crypto-actions"
+import { decryptCred, encryptCred } from "./crypto-actions"
 import { UnEncryptedCardType, UnEncryptedPassType } from "../types"
-import { cardsTable, passwordsTable, shareCredsTable } from "@/db/schema"
+import { credsTable, shareCredsTable } from "@/db/schema"
 import { db } from "@/db"
 import { and, DrizzleError, eq } from "drizzle-orm"
 import { auth } from "@clerk/nextjs/server"
-import { Failure, Result, Success } from "../return-types"
+import { Failure, Success } from "../return-types"
+import { hash_string } from "../_components/utils/hash"
 
 type CredType = "passwords" | "cards"
 
@@ -18,13 +19,17 @@ export async function unlockCred(
 ): Promise<UnEncryptedCardType | UnEncryptedPassType | null> {
     const { userId } = await auth()
 
-    const table = credType === "passwords" ? passwordsTable : cardsTable
-
     const { iv, enc, salt } = (
         await db
             .select()
-            .from(table)
-            .where(and(eq(table.id, credId), eq(table.userId, userId!)))
+            .from(credsTable)
+            .where(
+                and(
+                    eq(credsTable.id, credId),
+                    eq(credsTable.userId, userId!),
+                    eq(credsTable.credType, credType)
+                )
+            )
     )[0]
 
     const dec = await decryptCred(
@@ -41,10 +46,84 @@ export async function unlockCred(
     return parsed
 }
 
+export async function getEditableCred(
+    master_password: string,
+    credId: string,
+    credType: CredType
+): Promise<{
+    name: string
+    parsed: UnEncryptedCardType | UnEncryptedPassType
+} | null> {
+    const { userId } = await auth()
+
+    const { iv, enc, salt, name } = (
+        await db
+            .select()
+            .from(credsTable)
+            .where(
+                and(
+                    eq(credsTable.id, credId),
+                    eq(credsTable.userId, userId!),
+                    eq(credsTable.credType, credType)
+                )
+            )
+    )[0]
+
+    const dec = await decryptCred(
+        master_password,
+        toByteArray(iv),
+        toByteArray(enc),
+        toByteArray(salt)
+    )
+
+    if (dec == null) return null
+
+    const parsed = JSON.parse(dec)
+
+    return { name, parsed }
+}
+
+export async function editCred(
+    master_password: string,
+    data: string,
+    credType: CredType,
+    credId: string,
+    name: string
+) {
+    const { userId } = await auth()
+
+    const encrypted_values = await encryptCred(master_password, data)
+
+    if (encrypted_values == null)
+        return { success: false, cause: "Encryption failed" }
+
+    const { iv, enc, salt } = encrypted_values
+
+    try {
+        await db
+            .update(credsTable)
+            .set({
+                name,
+                enc: fromByteArray(enc),
+                iv: fromByteArray(iv),
+                salt: fromByteArray(salt),
+            })
+            .where(
+                and(eq(credsTable.id, credId), eq(credsTable.userId, userId!))
+            )
+
+        return Success()
+    } catch (e) {
+        return Failure(JSON.stringify((e as DrizzleError).cause))
+    }
+}
+
 export async function createSharedCred(
     decryptedData: UnEncryptedPassType | UnEncryptedCardType,
     credType: CredType,
-    sharable_password: string
+    credId: string,
+    sharable_password: string,
+    recipient_email: string
 ) {
     const { userId } = await auth()
 
@@ -55,15 +134,19 @@ export async function createSharedCred(
     if (reEncryptedCred == null) return Failure("Encryption failed")
     const { enc, iv, salt } = reEncryptedCred
 
+    const hashedEmail = await hash_string(recipient_email)
+    if (hashedEmail.success == false) return hashedEmail
+
     try {
         const addedRecord = await db
             .insert(shareCredsTable)
             .values({
                 credType,
+                credId,
                 iv: fromByteArray(iv),
                 enc: fromByteArray(enc),
                 salt: fromByteArray(salt),
-                recipient: "",
+                recipient: hashedEmail.data as string,
                 sender: userId!,
             })
             .returning({ id: shareCredsTable.id })
@@ -116,10 +199,9 @@ export async function addCred(
 
     const { iv, enc, salt } = encrypted_values
 
-    const table = credType === "passwords" ? passwordsTable : cardsTable
-
     try {
-        await db.insert(table).values({
+        await db.insert(credsTable).values({
+            credType,
             userId: userId!,
             iv: fromByteArray(iv),
             enc: fromByteArray(enc),
@@ -144,12 +226,12 @@ export async function deleteCred(
 
     if (cred == null) return Failure("Unlocking failed")
 
-    const table = credType === "passwords" ? passwordsTable : cardsTable
-
     try {
         await db
-            .delete(table)
-            .where(and(eq(table.id, credId), eq(table.userId, userId!)))
+            .delete(credsTable)
+            .where(
+                and(eq(credsTable.id, credId), eq(credsTable.userId, userId!))
+            )
 
         return Success()
     } catch (e) {
