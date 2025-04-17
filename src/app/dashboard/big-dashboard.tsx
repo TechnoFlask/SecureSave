@@ -1,7 +1,7 @@
 import { currentUser } from "@clerk/nextjs/server"
 import { SectionIsland } from "./_components/section-island"
 import { AccountIsland } from "./_components/account-island"
-import { CredsTable } from "./_components/creds-table"
+import { DashboardTable } from "./_components/dashboard-table"
 import { CredsTableFilters } from "./_components/creds-table-filters"
 import { AddCredButton } from "./_components/add-cred-button"
 import { CardType, PassType, SharedType } from "./types"
@@ -30,7 +30,7 @@ export async function BigDashboard({
             </div>
             <div className="grow flex flex-col items-end w-full gap-10">
                 <AddCredButton />
-                <CredsTable creds={creds} />
+                <DashboardTable creds={creds} />
             </div>
         </div>
     )
