@@ -1,7 +1,7 @@
 "use client"
 
 import { Card, CardContent } from "@/components/ui/card"
-import { FaCreditCard, FaKey } from "react-icons/fa6"
+import { FaClipboard, FaCreditCard, FaKey } from "react-icons/fa6"
 import { useSectionContext } from "../section-context"
 import { cn } from "@/lib/utils"
 
@@ -60,7 +60,7 @@ export function SectionIsland() {
                     )}
                     onClick={() => setCurrentSection("shared")}
                 >
-                    <FaKey
+                    <FaClipboard
                         className={cn({
                             "text-white": currentSection === "shared",
                         })}

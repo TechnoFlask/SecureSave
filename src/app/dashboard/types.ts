@@ -1,24 +1,13 @@
-export type EncryptedPassType = {
-    iv: string
-    enc: string
-    salt: string
-}
-
 export type UnEncryptedPassType = {
     username: string
     password: string
-}
-
-export type EncryptedCardType = {
-    iv: string
-    enc: string
-    salt: string
 }
 
 export type UnEncryptedCardType = {
     holderName: string
     cardNumber: string
     cvv: string
+    expiry: string
 }
 
 export type CommonCredType = {
@@ -27,17 +16,12 @@ export type CommonCredType = {
     createdAt: Date
 }
 
-export type PassType = EncryptedPassType & CommonCredType
+export type PassType = CommonCredType
 
-export type CardType = EncryptedCardType & CommonCredType
+export type CardType = CommonCredType
 
 export type SharedType = {
     id: string
     credType: "passwords" | "cards"
-    sender: string
-    recipient: string
-    iv: string
-    enc: string
-    salt: string
     createdAt: Date
 }
