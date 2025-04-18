@@ -14,7 +14,6 @@ import {
     AlertDialogCancel,
     AlertDialogDescription,
 } from "@/components/ui/alert-dialog"
-import { cn } from "@/lib/utils"
 
 function AddCredDialog({
     setIsDialogOpen,
@@ -55,29 +54,31 @@ export function AddCredButton() {
 
     return (
         <>
-            <button
-                className={cn({ "opacity-0": currentSection === "shared" })}
-            >
-                <Card
-                    className="cursor-pointer max-w-sm"
-                    onClick={() => setIsDialogOpen(true)}
-                >
-                    <CardContent className="flex justify-center items-center gap-3">
-                        <FaPlus />
-                        <span className="text-xl font-semibold">
-                            Add{" "}
-                            {currentSection === "passwords"
-                                ? "Password"
-                                : "Card"}
-                        </span>
-                    </CardContent>
-                </Card>
-            </button>
-            <AddCredDialog
-                open={isDialogOpen}
-                onOpenChange={setIsDialogOpen}
-                setIsDialogOpen={setIsDialogOpen}
-            />
+            {currentSection !== "shared" && (
+                <>
+                    <button>
+                        <Card
+                            className="cursor-pointer max-w-sm"
+                            onClick={() => setIsDialogOpen(true)}
+                        >
+                            <CardContent className="flex justify-center items-center gap-3">
+                                <FaPlus />
+                                <span className="text-xl font-semibold">
+                                    Add{" "}
+                                    {currentSection === "passwords"
+                                        ? "Password"
+                                        : "Card"}
+                                </span>
+                            </CardContent>
+                        </Card>
+                    </button>
+                    <AddCredDialog
+                        open={isDialogOpen}
+                        onOpenChange={setIsDialogOpen}
+                        setIsDialogOpen={setIsDialogOpen}
+                    />
+                </>
+            )}
         </>
     )
 }

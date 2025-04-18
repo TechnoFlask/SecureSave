@@ -20,7 +20,7 @@ function luhn_check(cardNumber: string) {
 }
 
 const masterPasswordSchema = zod.object({
-    master_password: zod
+    masterPassword: zod
         .string()
         .trim()
         .min(8, "Password must be at least 8 characters long")
@@ -91,3 +91,8 @@ export const cardFormSchema = zod
             ),
     })
     .merge(masterPasswordSchema)
+
+export const accessSharedCredFormSchema = zod.object({
+    sharablePassword: masterPasswordSchema.shape.masterPassword,
+    recipientEmail: zod.string().trim().email("Invalid email address"),
+})

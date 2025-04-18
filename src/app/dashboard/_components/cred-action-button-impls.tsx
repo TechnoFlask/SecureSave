@@ -27,9 +27,9 @@ import { Button } from "@/components/ui/button"
 import { UnEncryptedCardType, UnEncryptedPassType } from "../types"
 import { useSectionContext } from "../section-context"
 import { CardUpdateForm, PasswordUpdateForm } from "./forms"
+import { cardClipboard, passClipboard } from "../utils/clipboard"
 
 function DemandMasterPassword({
-    children,
     handleSubmit,
     ...props
 }: {
@@ -111,13 +111,9 @@ export function CopyCred({
         myToast.success("Copied to clipboard")
 
         if ("username" in cred) {
-            await navigator.clipboard.writeText(
-                `${cred.username} | ${cred.password}`
-            )
+            await passClipboard(cred)
         } else if ("holderName" in cred) {
-            await navigator.clipboard.writeText(
-                `${cred.holderName} | ${cred.cardNumber} | ${cred.cvv}`
-            )
+            await cardClipboard(cred)
         }
 
         // Clear clipboard

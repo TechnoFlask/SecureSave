@@ -8,7 +8,7 @@ import { db } from "@/db"
 import { and, DrizzleError, eq } from "drizzle-orm"
 import { auth } from "@clerk/nextjs/server"
 import { Failure, Success } from "../return-types"
-import { hash_string } from "../_components/utils/hash"
+import { hash_string, verify_hash } from "../utils/hash"
 
 type CredType = "passwords" | "cards"
 
@@ -159,15 +159,23 @@ export async function createSharedCred(
 
 export async function openSharedCred(
     sharedId: string,
-    shared_password: string
-): Promise<UnEncryptedPassType | UnEncryptedCardType | unknown> {
+    shared_password: string,
+    input_recipient: string
+) {
     try {
-        const { enc, iv, salt } = (
+        const { enc, iv, salt, recipient, credType } = (
             await db
                 .select()
                 .from(shareCredsTable)
                 .where(eq(shareCredsTable.id, sharedId))
         )[0]
+
+        const verified = await verify_hash(recipient, input_recipient)
+
+        if (verified.success == false)
+            return Failure("Credential opening failed")
+
+        if (verified.data == false) return Failure("Credential opening failed")
 
         const dec = await decryptCred(
             shared_password,
@@ -178,7 +186,9 @@ export async function openSharedCred(
 
         if (dec == null) return Failure("Decryption failed")
 
-        return Success(JSON.parse(dec))
+        await db.delete(shareCredsTable).where(eq(shareCredsTable.id, sharedId))
+
+        return Success([JSON.parse(dec), credType])
     } catch (e) {
         return Failure(JSON.stringify(e as DrizzleError))
     }

@@ -15,7 +15,7 @@ export default async function Dashboard() {
             <div className="container mx-auto lg:hidden">
                 <SmallDashboard creds={creds} />
             </div>
-            <div className="hidden w-screen h-screen lg:flex justify-center items-center xl:-translate-y-24">
+            <div className="hidden w-screen h-screen lg:flex justify-center items-start xl:translate-y-36">
                 <BigDashboard creds={creds} />
             </div>
         </DashboardContextProvider>

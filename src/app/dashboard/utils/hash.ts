@@ -1,5 +1,5 @@
 import argon2 from "argon2"
-import { Failure, Success } from "../../return-types"
+import { Failure, Success } from "../return-types"
 
 export async function hash_string(data: string) {
     try {

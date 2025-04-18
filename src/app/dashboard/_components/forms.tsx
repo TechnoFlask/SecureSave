@@ -30,12 +30,12 @@ export function PasswordForm({
             name: "",
             username: "",
             password: "",
-            master_password: "",
+            masterPassword: "",
         },
     })
 
     async function onSubmit(values: zod.infer<typeof passwordFormSchema>) {
-        const { username, password, master_password } = values
+        const { username, password, masterPassword: master_password } = values
         const toastId = myToast.loading("Processing....")
         const res = await addCred(
             master_password,
@@ -127,7 +127,7 @@ export function PasswordForm({
                 />
                 <FormField
                     control={form.control}
-                    name="master_password"
+                    name="masterPassword"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel className="text-lg">
@@ -171,14 +171,20 @@ export function CardForm({
             holderName: "",
             cardNumber: "",
             cvv: "",
-            master_password: "",
+            masterPassword: "",
             expiry: "",
         },
     })
 
     async function onSubmit(values: zod.infer<typeof cardFormSchema>) {
-        const { name, holderName, cardNumber, cvv, expiry, master_password } =
-            values
+        const {
+            name,
+            holderName,
+            cardNumber,
+            cvv,
+            expiry,
+            masterPassword: master_password,
+        } = values
         const toastId = myToast.loading("Processing....")
         const res = await addCred(
             master_password,
@@ -308,7 +314,7 @@ export function CardForm({
                 />
                 <FormField
                     control={form.control}
-                    name="master_password"
+                    name="masterPassword"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel className="text-lg">
@@ -339,9 +345,9 @@ export function CardForm({
 }
 
 const editPasswordFormSchema = passwordFormSchema.omit({
-    master_password: true,
+    masterPassword: true,
 })
-const editCardFormSchema = cardFormSchema.omit({ master_password: true })
+const editCardFormSchema = cardFormSchema.omit({ masterPassword: true })
 
 export function PasswordUpdateForm({
     closeParentDialog,

@@ -1,4 +1,4 @@
-type SuccessType = { success: true; data?: unknown }
+type SuccessType = { success: true; data?: any }
 type FailureType = { success: false; cause: string }
 
 export type Result = SuccessType | FailureType

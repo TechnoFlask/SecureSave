@@ -5,6 +5,7 @@ import { DashboardTable } from "./_components/dashboard-table"
 import { CredsTableFilters } from "./_components/creds-table-filters"
 import { AddCredButton } from "./_components/add-cred-button"
 import { CardType, PassType, SharedType } from "./types"
+import { AccessSharedCred } from "./_components/access-shared-cred"
 
 export async function BigDashboard({
     creds,
@@ -29,7 +30,10 @@ export async function BigDashboard({
                 <CredsTableFilters />
             </div>
             <div className="grow flex flex-col items-end w-full gap-10">
-                <AddCredButton />
+                <div className="flex justify-between w-full">
+                    <AccessSharedCred />
+                    <AddCredButton />
+                </div>
                 <DashboardTable creds={creds} />
             </div>
         </div>
