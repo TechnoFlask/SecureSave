@@ -32,7 +32,7 @@ export default function RootLayout({
                 <body className={`${openSans.className} antialiased`}>
                     <ThemeProvider
                         attribute="class"
-                        defaultTheme="system"
+                        defaultTheme="light"
                         enableSystem
                         disableTransitionOnChange
                     >
