@@ -17,7 +17,7 @@ function Hero({ ...props }: React.ComponentProps<"section">) {
                         Securely store and manage your credentials — with
                         confidence
                     </h1>
-                    <h2 className="text-2xl xl:text-3xl mb-2">
+                    <h2 className="text-2xl xl:text-3xl mb-2 lg:pr-4">
                         SecureSave is your encrypted, easy-to-use password and
                         credential manager built for peace of mind
                     </h2>
