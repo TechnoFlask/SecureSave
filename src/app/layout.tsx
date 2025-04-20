@@ -5,13 +5,10 @@ import Navbar from "@/components/Navbar"
 import { ThemeProvider } from "@/components/ThemeProvider"
 import { ClerkProvider } from "@clerk/nextjs"
 import { Toaster } from "sonner"
+import { FaGithub } from "react-icons/fa6"
+import Link from "next/link"
 
 const openSans = Open_Sans({
-    weight: ["400"],
-    subsets: ["latin"],
-})
-
-const inter = Inter({
     weight: ["400"],
     subsets: ["latin"],
 })
@@ -28,7 +25,7 @@ export default function RootLayout({
 }>) {
     return (
         <ClerkProvider>
-            <html lang="en" suppressHydrationWarning>
+            <html lang="en" suppressHydrationWarning className="scroll-smooth">
                 <body className={`${openSans.className} antialiased`}>
                     <ThemeProvider
                         attribute="class"
@@ -36,11 +33,21 @@ export default function RootLayout({
                         enableSystem
                         disableTransitionOnChange
                     >
-                        <header className="sticky top-0 z-10">
+                        {/* <header className="sticky top-0 z-10">
                             <Navbar />
-                        </header>
+                        </header> */}
                         <main>{children}</main>
-                        <footer></footer>
+                        <footer className="text-center text-gray-500 py-8 text-sm bg-white flex items-center justify-center gap-10 lg:gap-50">
+                            <p className="pl-10 lg:pl-50">
+                                Built by Technoflask · 2025
+                            </p>
+                            <Link
+                                href="https://github.com/Technoflask/SecureSave"
+                                target="_blank"
+                            >
+                                <FaGithub size={30} />
+                            </Link>
+                        </footer>
                         <Toaster />
                     </ThemeProvider>
                 </body>
