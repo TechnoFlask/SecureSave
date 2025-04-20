@@ -22,17 +22,17 @@ import { CommonCredType } from "../types"
 import { useSectionContext } from "../section-context"
 import { Button } from "@/components/ui/button"
 
-function truncateOrPad(str: string, maxlength: number) {
-    if (str.length > maxlength) {
-        return str.slice(0, maxlength) + "..."
-    } else {
-        let pad = ""
-        for (let i = 0; i < maxlength - str.length; i++) {
-            pad = pad + " "
-        }
-        return str + pad
-    }
-}
+// function truncateOrPad(str: string, maxlength: number) {
+//     if (str.length > maxlength) {
+//         return str.slice(0, maxlength) + "..."
+//     } else {
+//         let pad = ""
+//         for (let i = 0; i < maxlength - str.length; i++) {
+//             pad = pad + " "
+//         }
+//         return str + pad
+//     }
+// }
 
 const PER_PAGE = 6
 
@@ -114,7 +114,8 @@ export function CredsTable({
                     {paginatedFilteredCreds.map((cred) => (
                         <TableRow key={cred.id}>
                             <TableCell className="text-lg text-center font-medium">
-                                {truncateOrPad(cred.name, 10)}
+                                {cred.name}
+                                {/* {truncateOrPad(cred.name, 10)} */}
                             </TableCell>
                             <TableCell className="text-lg text-center font-medium">
                                 {cred.createdAt.toLocaleString()}
