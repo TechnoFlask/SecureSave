@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button"
 import { SignedIn, SignedOut } from "@clerk/nextjs"
 import { Lock, Shield } from "lucide-react"
 import Link from "next/link"
+import { Suspense } from "react"
+import { FaGithub } from "react-icons/fa6"
 import { FiShare2, FiShield, FiFeather } from "react-icons/fi"
 
 function Hero({ ...props }: React.ComponentProps<"section">) {
@@ -22,23 +24,41 @@ function Hero({ ...props }: React.ComponentProps<"section">) {
                         credential manager built for peace of mind
                     </h2>
                     <div className="flex gap-5">
-                        <SignedIn>
-                            <Button className="text-base xl:text-lg" size="lg">
-                                <Link href="/dashboard">Your Credentials</Link>
-                            </Button>
-                        </SignedIn>
-                        <SignedOut>
-                            <Button className="text-base xl:text-lg" size="lg">
-                                <Link href="/sign-in">Get Started</Link>
-                            </Button>
-                        </SignedOut>
-                        <Button
-                            className="text-base xl:text-lg"
-                            variant="outline"
-                            size="lg"
+                        <Suspense
+                            fallback={
+                                <div className="h-8 w-32 bg-gray-300 animate-pulse rounded-full" />
+                            }
                         >
-                            <Link href="#features">Learn More</Link>
-                        </Button>
+                            <SignedOut>
+                                <Link href="/sign-in">
+                                    <Button
+                                        className="text-base xl:text-lg cursor-pointer"
+                                        size="lg"
+                                    >
+                                        Your Credentials
+                                    </Button>
+                                </Link>
+                            </SignedOut>
+                            <SignedIn>
+                                <Link href="/dashboard">
+                                    <Button
+                                        className="text-base xl:text-lg cursor-pointer"
+                                        size="lg"
+                                    >
+                                        Your Credentials
+                                    </Button>
+                                </Link>
+                            </SignedIn>
+                        </Suspense>
+                        <Link href="#features">
+                            <Button
+                                className="text-base xl:text-lg cursor-pointer"
+                                variant="outline"
+                                size="lg"
+                            >
+                                Learn More
+                            </Button>
+                        </Link>
                     </div>
                 </div>
                 <div className="relative w-full max-w-sm h-[300px] xl:max-w-lg xl:h-[350px] bg-gradient-to-br from-accent-foreground/50 to-accent-foreground rounded-xl shadow-2xl overflow-hidden">
@@ -106,7 +126,7 @@ function Features() {
 
 function ThankYou() {
     return (
-        <section className="py-16 text-center bg-gray-100 rounded-xl">
+        <section className="py-16 px-5 text-center bg-gray-100 rounded-xl">
             <h3 className="text-2xl lg:text-3xl font-semibold mb-4">
                 Thank You for Visiting
             </h3>
@@ -125,10 +145,21 @@ function ThankYou() {
 export default function Home() {
     return (
         <div className="container mx-auto min-h-screen">
-            <div className="py-16 xl:pt-48 xl:pb-20 flex flex-col gap-24 lg:gap-36">
+            <div className="pt-16 xl:pt-48 flex flex-col gap-24 lg:gap-36">
                 <Hero className="" />
                 <Features />
                 <ThankYou />
+                <footer className="text-center text-gray-500 py-8 text-sm bg-white flex items-center justify-center gap-10 lg:gap-50">
+                    <p className="pl-10 lg:pl-50">
+                        Built by Technoflask · 2025
+                    </p>
+                    <Link
+                        href="https://github.com/Technoflask/SecureSave"
+                        target="_blank"
+                    >
+                        <FaGithub size={30} />
+                    </Link>
+                </footer>
             </div>
         </div>
     )

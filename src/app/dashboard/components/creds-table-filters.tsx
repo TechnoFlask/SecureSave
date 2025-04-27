@@ -28,7 +28,7 @@ export function CredsTableFilters() {
     const searchParams = useSearchParams()
     const pathname = usePathname()
     const [date, setDate] = useState<Date | undefined>(new Date())
-    const [range, setRange] = useState("Before")
+    const [range, setRange] = useState("On")
     const nameSearchInputRef = useRef<HTMLInputElement>(null)
     const { currentSection } = useSectionContext()
 

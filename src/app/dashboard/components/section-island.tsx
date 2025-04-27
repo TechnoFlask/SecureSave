@@ -8,15 +8,15 @@ import { cn } from "@/lib/utils"
 export function SectionIsland() {
     const { currentSection, setCurrentSection } = useSectionContext()
     return (
-        <Card className="w-3xs p-0">
+        <Card className="w-full lg:w-3xs p-0 max-lg:shadow-none max-lg:border-none">
             <CardContent className="flex flex-col w-full p-0">
                 <div
                     className={cn(
-                        "flex items-center gap-3 cursor-pointer w-full p-2.5 rounded-tl-xl rounded-tr-xl transition-colors duration-500",
+                        "max-lg:py-6 flex items-center gap-3 cursor-pointer w-full p-2.5 lg:rounded-tl-xl lg:rounded-tr-xl transition-colors duration-500",
                         {
                             "bg-accent-foreground text-white":
                                 currentSection === "passwords",
-                            "hover:bg-accent-foreground/10":
+                            "hover:bg-accent-foreground/10 max-lg:bg-gray-200":
                                 currentSection !== "passwords",
                         }
                     )}
@@ -27,15 +27,17 @@ export function SectionIsland() {
                             "text-white": currentSection === "passwords",
                         })}
                     />
-                    <span className="text-xl font-semibold">My Passwords</span>
+                    <span className="text-lg lg:text-xl font-semibold">
+                        My Passwords
+                    </span>
                 </div>
                 <div
                     className={cn(
-                        "flex items-center gap-3 cursor-pointer w-full p-2.5 transition-colors duration-500",
+                        "max-lg:py-6 flex items-center gap-3 cursor-pointer w-full p-2.5 transition-colors duration-500",
                         {
                             "bg-accent-foreground text-white":
                                 currentSection === "cards",
-                            "hover:bg-accent-foreground/10":
+                            "hover:bg-accent-foreground/10 max-lg:bg-gray-200":
                                 currentSection !== "cards",
                         }
                     )}
@@ -46,15 +48,17 @@ export function SectionIsland() {
                             "text-white": currentSection === "cards",
                         })}
                     />
-                    <span className="text-xl font-semibold">My Cards</span>
+                    <span className="text-lg lg:text-xl font-semibold">
+                        My Cards
+                    </span>
                 </div>
                 <div
                     className={cn(
-                        "flex items-center gap-3 cursor-pointer w-full p-2.5 rounded-bl-xl rounded-br-xl transition-colors duration-500",
+                        "max-lg:py-6 flex items-center gap-3 cursor-pointer w-full p-2.5 lg:rounded-bl-xl lg:rounded-br-xl transition-colors duration-500",
                         {
                             "bg-accent-foreground text-white":
                                 currentSection === "shared",
-                            "hover:bg-accent-foreground/10":
+                            "hover:bg-accent-foreground/10 max-lg:bg-gray-200":
                                 currentSection !== "shared",
                         }
                     )}
@@ -65,8 +69,10 @@ export function SectionIsland() {
                             "text-white": currentSection === "shared",
                         })}
                     />
-                    <span className="text-xl font-semibold">
-                        Shared Credentials
+                    <span className="text-lg lg:text-xl font-semibold">
+                        Shared{" "}
+                        <span className="hidden lg:inline">Credentials</span>
+                        <span className="lg:hidden">Creds</span>
                     </span>
                 </div>
             </CardContent>

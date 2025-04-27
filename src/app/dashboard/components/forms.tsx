@@ -47,7 +47,7 @@ export function PasswordForm({
             values.name
         )
 
-        if (res.success == false) {
+        if (res.success === false) {
             myToast.dismiss(toastId)
             myToast.error("Failed to create the credential")
             return
@@ -198,7 +198,7 @@ export function CardForm({
             name
         )
 
-        if (res.success == false) {
+        if (res.success === false) {
             myToast.dismiss(toastId)
             myToast.error("Failed to create the credential")
             return
@@ -373,12 +373,11 @@ export function PasswordUpdateForm({
         const res = await editCred(
             master_password,
             JSON.stringify({ username, password }),
-            "passwords",
             credId,
             name
         )
 
-        if (res.success == false) {
+        if (res.success === false) {
             myToast.dismiss(toastId)
             myToast.error("Failed to update the credential")
             return
@@ -492,12 +491,11 @@ export function CardUpdateForm({
         const res = await editCred(
             master_password,
             JSON.stringify({ holderName, cardNumber, cvv, expiry }),
-            "cards",
             credId,
             name
         )
 
-        if (res.success == false) {
+        if (res.success === false) {
             myToast.dismiss(toastId)
             myToast.error("Failed to update the credential")
             return

@@ -24,7 +24,7 @@ export function clipboardWarning(intervalId: NodeJS.Timeout) {
         </div>,
         {
             icon: <FaClipboard />,
-            className: "!border-red-400 !border-4 !w-lg",
+            className: "!border-red-400 !border-4 lg:!w-lg",
         }
     )
 }

@@ -1,11 +1,12 @@
-import { cloneElement, useRef, useState, useTransition } from "react"
+"use client"
+
+import { cloneElement, useRef, useState } from "react"
 import { FaClipboard, FaShareFromSquare, FaTrashCan } from "react-icons/fa6"
 import {
     deleteCred,
     createSharedCred,
-    unlockCred,
-    openSharedCred,
     getEditableCred,
+    unlockCred,
 } from "../actions/cred-actions"
 
 import { Input } from "@/components/ui/input"
@@ -91,29 +92,23 @@ function CardAction({
     )
 }
 
-export function CopyCred({
-    credId,
-    credType,
-}: {
-    credId: string
-    credType: "passwords" | "cards"
-}) {
+export function CopyCred({ credId }: { credId: string }) {
     async function handleSubmit(master_password: string) {
         const toastId = myToast.loading("Processing....")
-        const cred = await unlockCred(master_password, credId, credType)
+        const cred = await unlockCred(master_password, credId)
         myToast.dismiss(toastId)
 
-        if (cred == null) {
+        if (cred.success === false) {
             myToast.error("Incorrect Unlock Credentials")
             return
         }
 
         myToast.success("Copied to clipboard")
 
-        if ("username" in cred) {
-            await passClipboard(cred)
-        } else if ("holderName" in cred) {
-            await cardClipboard(cred)
+        if ("username" in cred.data) {
+            await passClipboard(cred.data)
+        } else if ("holderName" in cred.data) {
+            await cardClipboard(cred.data)
         }
 
         // Clear clipboard
@@ -124,10 +119,13 @@ export function CopyCred({
 
     return (
         <CardAction handleSubmit={handleSubmit}>
-            <FaClipboard
-                size={18}
-                className="cursor-pointer drop-shadow-lg drop-shadow-accent-foreground/40"
-            />
+            <div className="flex gap-2 items-center">
+                <FaClipboard
+                    size={18}
+                    className="cursor-pointer drop-shadow-lg drop-shadow-accent-foreground/40"
+                />
+                <span className="lg:hidden">Copy Credential</span>
+            </div>
         </CardAction>
     )
 }
@@ -211,13 +209,7 @@ function EditCredDialog({
     )
 }
 
-export function EditCred({
-    credId,
-    credType,
-}: {
-    credId: string
-    credType: "passwords" | "cards"
-}) {
+export function EditCred({ credId }: { credId: string }) {
     const [cred, setCred] = useState<{
         name: string
         parsed: UnEncryptedCardType | UnEncryptedPassType
@@ -237,25 +229,29 @@ export function EditCred({
 
     async function handleSubmit(master_password: string) {
         const toastId = myToast.loading("Processing....")
-        const cred = await getEditableCred(master_password, credId, credType)
+        const cred = await getEditableCred(master_password, credId)
         setMasterPass(master_password)
 
         myToast.dismiss(toastId)
-        if (cred == null) {
+        if (cred.success === false) {
             myToast.error("Failed to unlock credential")
             return
         }
-        setCred(cred)
+        setCred(cred.data)
         setIsDialogOpen(true)
     }
 
     return (
         <>
             <CardAction handleSubmit={handleSubmit}>
-                <FaEdit
-                    size={18}
-                    className="cursor-pointer drop-shadow-lg drop-shadow-accent-foreground/40"
-                />
+                <div className="flex gap-2 items-center">
+                    <FaEdit
+                        size={18}
+                        className="cursor-pointer drop-shadow-lg drop-shadow-accent-foreground/40"
+                    />
+
+                    <span className="lg:hidden">Edit Credential</span>
+                </div>
             </CardAction>
             <EditCredDialog
                 credId={credId}
@@ -285,24 +281,27 @@ export function ShareCred({
 
     async function handleSubmit(master_password: string) {
         const toastId = myToast.loading("Processing....")
-        const cred = await unlockCred(master_password, credId, credType)
+        const cred = await unlockCred(master_password, credId)
 
         myToast.dismiss(toastId)
-        if (cred == null) {
+        if (cred.success === false) {
             myToast.error("Failed to unlock credential")
             return
         }
-        setCred(cred)
+        setCred(cred.data)
         setIsTempPassDialogOpen(true)
     }
 
     return (
         <>
             <CardAction handleSubmit={handleSubmit}>
-                <FaShareFromSquare
-                    size={18}
-                    className="cursor-pointer drop-shadow-lg drop-shadow-accent-foreground/40"
-                />
+                <div className="flex gap-2 items-center">
+                    <FaShareFromSquare
+                        size={18}
+                        className="cursor-pointer drop-shadow-lg drop-shadow-accent-foreground/40"
+                    />
+                    <span className="lg:hidden">Share Credential</span>
+                </div>
             </CardAction>
             <AlertDialog
                 open={isTempPassDialogOpen}
@@ -333,7 +332,7 @@ export function ShareCred({
                                         recipientEmailInputRef.current!.value
                                     )
 
-                                    if (sharableId.success === false) {
+                                    if ("error" in sharableId) {
                                         myToast.dismiss(toastId)
                                         myToast.error(
                                             "Failed to create sharable Id"
@@ -380,17 +379,11 @@ export function ShareCred({
     )
 }
 
-export function DeleteCred({
-    credId,
-    credType,
-}: {
-    credId: string
-    credType: "passwords" | "cards"
-}) {
+export function DeleteCred({ credId }: { credId: string }) {
     const router = useRouter()
     async function handleSubmit(master_password: string) {
         const toastId = myToast.loading("Processing....")
-        const cred = await deleteCred(master_password, credId, credType)
+        const cred = await deleteCred(master_password, credId)
 
         if (cred.success === false) {
             myToast.dismiss(toastId)
@@ -405,10 +398,15 @@ export function DeleteCred({
 
     return (
         <CardAction handleSubmit={handleSubmit}>
-            <FaTrashCan
-                size={18}
-                className="text-red-400 cursor-pointer drop-shadow-lg drop-shadow-accent-foreground/40"
-            />
+            <div className="flex gap-2 items-center">
+                <FaTrashCan
+                    size={18}
+                    className="text-red-400 cursor-pointer drop-shadow-lg drop-shadow-accent-foreground/40"
+                />
+                <span className="lg:hidden text-red-400">
+                    Delete Credential
+                </span>
+            </div>
         </CardAction>
     )
 }

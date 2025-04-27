@@ -1,23 +1,12 @@
-import { currentUser } from "@clerk/nextjs/server"
-import { SectionIsland } from "./_components/section-island"
-import { AccountIsland } from "./_components/account-island"
-import { DashboardTable } from "./_components/dashboard-table"
-import { CredsTableFilters } from "./_components/creds-table-filters"
-import { AddCredButton } from "./_components/add-cred-button"
-import { CardType, PassType, SharedType } from "./types"
-import { AccessSharedCred } from "./_components/access-shared-cred"
+import { SectionIsland } from "./components/section-island"
+import { AccountIsland } from "./components/account-island"
+import { DashboardTable } from "./components/dashboard-table"
+import { CredsTableFilters } from "./components/creds-table-filters"
+import { AddCredButton } from "./components/add-cred-button"
+import { AccessSharedCred } from "./components/access-shared-cred"
+import { Suspense } from "react"
 
-export async function BigDashboard({
-    creds,
-}: {
-    creds: {
-        passwords: PassType[]
-        cards: CardType[]
-        shared: SharedType[]
-    }
-}) {
-    const user = await currentUser()
-
+export async function BigDashboard() {
     // const creds = await getServerCreds()
     // if (creds.error != undefined)
     //     return <div>Failed to load credentials. Please try again later....</div>

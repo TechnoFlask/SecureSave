@@ -99,15 +99,17 @@ export function AccessSharedCred() {
 
     return (
         <>
-            <button>
+            <button className="max-lg:w-full">
                 <Card
-                    className="cursor-pointer max-w-sm"
+                    className="cursor-pointer max-lg:px-0 max-lg:py-3.5 w-full lg:w-xs max-lg:shadow-none max-lg:border-none"
                     onClick={() => setIsDialogOpen(true)}
                 >
-                    <CardContent className="flex justify-center items-center gap-3">
+                    <CardContent className="flex justify-center items-center gap-3 px-0">
                         <FaShareFromSquare />
-                        <span className="text-xl font-semibold">
-                            Access shared credential
+                        <span className="text-lg lg:text-xl font-semibold">
+                            Access Shared{" "}
+                            <span className="lg:hidden">Cred</span>
+                            <span className="hidden lg:inline">Credential</span>
                         </span>
                     </CardContent>
                 </Card>
