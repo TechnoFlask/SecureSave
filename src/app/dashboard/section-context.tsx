@@ -1,7 +1,6 @@
 "use client"
 
 import { createContext, useContext, useState } from "react"
-import { CardType, PassType } from "./types"
 
 type DashboardContextType = {
     currentSection: "passwords" | "cards" | "shared"
