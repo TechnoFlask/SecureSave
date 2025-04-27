@@ -25,16 +25,35 @@ export async function BigDashboard({
     return (
         <div className="container mx-auto p-10 xl:p-0 flex gap-10 xl:justify-center xl:items-start">
             <div className="flex flex-col gap-10">
-                <AccountIsland user={user} />
+                <Suspense
+                    fallback={
+                        <div className="w-full h-20 bg-slate-200 animate-pulse rounded-md" />
+                    }
+                >
+                    <AccountIsland />
+                </Suspense>
                 <SectionIsland />
-                <CredsTableFilters />
+
+                <Suspense
+                    fallback={
+                        <div className="w-full h-20 bg-slate-200 animate-pulse rounded-md" />
+                    }
+                >
+                    <CredsTableFilters />
+                </Suspense>
             </div>
             <div className="grow flex flex-col items-end w-full gap-10">
                 <div className="flex justify-between w-full">
                     <AccessSharedCred />
                     <AddCredButton />
                 </div>
-                <DashboardTable creds={creds} />
+                <Suspense
+                    fallback={
+                        <div className="w-full h-20 bg-slate-200 animate-pulse rounded-md" />
+                    }
+                >
+                    <DashboardTable />
+                </Suspense>
             </div>
         </div>
     )
