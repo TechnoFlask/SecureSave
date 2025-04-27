@@ -1,29 +1,9 @@
-"use server"
-
-import argon2 from "argon2"
+import "server-only"
+import { Failure, Success } from "../utils/return-types"
+import { hashStringRaw } from "../utils/hash"
 
 export async function getRandomSalt(length: number) {
     return crypto.getRandomValues(new Uint8Array(length))
-}
-
-export async function hashPassword(master_password: string, salt: Uint8Array) {
-    try {
-        const hashed_pass = await argon2.hash(master_password, {
-            type: argon2.argon2id,
-            salt: Buffer.from(salt),
-            hashLength: 32,
-            timeCost: 3,
-            memoryCost: 1024,
-            parallelism: 1,
-            raw: true,
-        })
-
-        return hashed_pass
-    } catch (e) {
-        console.error((e as Error).message)
-
-        return null
-    }
 }
 
 export async function deriveKey(
@@ -31,24 +11,25 @@ export async function deriveKey(
     salt: Uint8Array,
     extractable: boolean
 ) {
-    const hashed_pass = await hashPassword(master_password, salt)
-
-    if (hashed_pass == null) return null
+    const hashed_pass = await hashStringRaw(master_password, salt)
+    if (hashed_pass.success === false) return hashed_pass
 
     try {
         const cryptoKey = await crypto.subtle.importKey(
             "raw",
-            hashed_pass,
+            hashed_pass.data,
             { name: "AES-GCM", length: 256 },
             extractable,
             ["encrypt", "decrypt"]
         )
 
-        return cryptoKey
+        return Success(cryptoKey)
     } catch (e) {
-        console.error((e as Error).message)
-
-        return null
+        return Failure(
+            "Failed to derive key",
+            (e as Error).cause,
+            (e as Error).message
+        )
     }
 }
 
@@ -57,44 +38,44 @@ export async function deriveExtractedKey(
     salt: Uint8Array
 ) {
     const sharableCryptoKey = await deriveKey(master_password, salt, true)
-
-    console.log(sharableCryptoKey)
-
-    if (sharableCryptoKey == null) return null
+    if (sharableCryptoKey.success === false) return sharableCryptoKey
 
     try {
         const extractedCryptoKey = await crypto.subtle.exportKey(
             "jwk",
-            sharableCryptoKey
+            sharableCryptoKey.data
         )
 
-        return extractedCryptoKey
+        return Success(extractedCryptoKey)
     } catch (e) {
-        console.error((e as Error).message)
-
-        return null
+        return Failure(
+            "Failed to derive key",
+            (e as Error).cause,
+            (e as Error).message
+        )
     }
 }
 
 export async function encryptCred(master_password: string, data: string) {
     const salt = await getRandomSalt(32)
     const cryptoKey = await deriveKey(master_password, salt, false)
-
-    if (cryptoKey == null) return null
+    if (cryptoKey.success === false) return cryptoKey
 
     try {
         const iv = crypto.getRandomValues(new Uint8Array(16))
         const enc = await crypto.subtle.encrypt(
             { name: "AES-GCM", iv },
-            cryptoKey,
+            cryptoKey.data,
             new TextEncoder().encode(data)
         )
 
-        return { iv, enc: new Uint8Array(enc), salt }
+        return Success({ iv, enc: new Uint8Array(enc), salt })
     } catch (e) {
-        console.error((e as Error).message)
-
-        return null
+        return Failure(
+            "Failed to encrypt credential",
+            (e as Error).cause,
+            (e as Error).message
+        )
     }
 }
 
@@ -105,20 +86,21 @@ export async function decryptCred(
     salt: Uint8Array
 ) {
     const cryptoKey = await deriveKey(master_password, salt, false)
-
-    if (cryptoKey == null) return null
+    if (cryptoKey.success === false) return cryptoKey
 
     try {
         const dec = await crypto.subtle.decrypt(
             { name: "AES-GCM", iv },
-            cryptoKey,
+            cryptoKey.data,
             enc
         )
 
-        return new TextDecoder().decode(dec)
+        return Success(new TextDecoder().decode(dec))
     } catch (e) {
-        console.error((e as Error).cause)
-
-        return null
+        return Failure(
+            "Failed to decrypt credential",
+            (e as Error).cause,
+            (e as Error).message
+        )
     }
 }

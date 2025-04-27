@@ -13,7 +13,8 @@ export type UnEncryptedCardType = {
 export type CommonCredType = {
     id: string
     name: string
-    createdAt: Date
+    createdAt: string
+    credType: "passwords" | "cards"
 }
 
 export type PassType = CommonCredType
@@ -23,5 +24,6 @@ export type CardType = CommonCredType
 export type SharedType = {
     id: string
     credType: "passwords" | "cards"
-    createdAt: Date
+    createdAt: string
+    name: string
 }
