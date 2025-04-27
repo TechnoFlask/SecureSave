@@ -4,6 +4,7 @@ import { DashboardContextProvider } from "./section-context"
 import { getServerCreds } from "./actions/server-data"
 
 export const dynamic = "force-dynamic"
+export const experimental_ppr = true
 
 export default async function Dashboard() {
     const creds = await getServerCreds()
