@@ -1,9 +1,9 @@
 import type { Metadata } from "next"
 import { Open_Sans } from "next/font/google"
 import "./globals.css"
-import { ThemeProvider } from "@/components/ThemeProvider"
 import { ClerkProvider } from "@clerk/nextjs"
 import { Toaster } from "sonner"
+import { Analytics } from "@vercel/analytics/next"
 
 const openSans = Open_Sans({
     weight: ["400"],
@@ -35,6 +35,7 @@ export default function RootLayout({
                         </header> */}
                     <main>{children}</main>
                     <Toaster />
+                    <Analytics />
                     {/* </ThemeProvider> */}
                 </body>
             </html>

@@ -6,6 +6,8 @@ import { Suspense } from "react"
 import { FaGithub } from "react-icons/fa6"
 import { FiShare2, FiShield, FiFeather } from "react-icons/fi"
 
+export const experimental_ppr = true
+
 function Hero({ ...props }: React.ComponentProps<"section">) {
     return (
         <section {...props}>
