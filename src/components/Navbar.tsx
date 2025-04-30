@@ -14,6 +14,7 @@ import { SignedIn, SignedOut, SignInButton, SignOutButton } from "@clerk/nextjs"
 import { AccountIsland } from "@/app/dashboard/components/account-island"
 import { AccessSharedCred } from "@/app/dashboard/components/access-shared-cred"
 import { SectionIsland } from "@/app/dashboard/components/section-island"
+import { Suspense } from "react"
 
 function NavTitle({ size }: { size: number }) {
     return (
@@ -38,7 +39,13 @@ async function SmallNavSidebar() {
                     <SheetTitle>Side Bar</SheetTitle>
                 </SheetHeader>
                 <div className="flex flex-col gap-20 w-full">
-                    <AccountIsland />
+                    <Suspense
+                        fallback={
+                            <div className="w-full h-20 bg-slate-200 animate-pulse rounded-md" />
+                        }
+                    >
+                        <AccountIsland />
+                    </Suspense>
                     <SectionIsland />
                 </div>
                 <p className="text-center text-gray-500 py-8 px-3 text-sm">
@@ -75,7 +82,7 @@ async function SmallNavSidebar() {
 
 function SmallNav() {
     return (
-        <nav className="sticky top-0 lg:hidden py-4 px-6 bg-accent/50 backdrop-blur-lg flex justify-between items-center shadow-lg">
+        <nav className="sticky top-0 lg:hidden py-4 px-6 bg-accent/50 backdrop-blur-lg flex justify-between items-center shadow-lg h-[67px]">
             <Link
                 href="/"
                 className="drop-shadow-xl drop-shadow-accent-foreground/40"
@@ -83,17 +90,23 @@ function SmallNav() {
                 <NavTitle size={25} />
             </Link>
             <div className="flex gap-2 justify-center items-center drop-shadow-xl drop-shadow-accent-foreground/40">
-                <SignedIn>
-                    <SmallNavSidebar />
-                </SignedIn>
-                <SignedOut>
-                    <SignInButton>
-                        <span className="flex items-center gap-2">
-                            <FaUser />
-                            <span>Sign In</span>
-                        </span>
-                    </SignInButton>
-                </SignedOut>
+                <Suspense
+                    fallback={
+                        <div className="w-10 h-10 animate-pulse rounded-full bg-slate-200" />
+                    }
+                >
+                    <SignedIn>
+                        <SmallNavSidebar />
+                    </SignedIn>
+                    <SignedOut>
+                        <SignInButton>
+                            <span className="flex items-center gap-2">
+                                <FaUser />
+                                <span>Sign In</span>
+                            </span>
+                        </SignInButton>
+                    </SignedOut>
+                </Suspense>
                 {/* <ThemeToggle /> */}
             </div>
         </nav>
