@@ -8,8 +8,9 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { SharedType } from "../types"
-import { useSectionContext } from "../section-context"
+import { SharedType } from "../../types"
+import { useSectionContext } from "../../section-context"
+import { SharedCredActions } from "../shared-action-buttons"
 
 export default function SharedTable({ shared }: { shared: SharedType[] }) {
     const { currentSection } = useSectionContext()
@@ -20,7 +21,7 @@ export default function SharedTable({ shared }: { shared: SharedType[] }) {
                     <TableHeader>
                         <TableRow>
                             <TableHead className="text-xl font-semibold text-center">
-                                Shared ID
+                                Name
                             </TableHead>
                             <TableHead className="text-xl font-semibold text-center">
                                 Type
@@ -28,13 +29,16 @@ export default function SharedTable({ shared }: { shared: SharedType[] }) {
                             <TableHead className="text-xl font-semibold text-center">
                                 Shared On
                             </TableHead>
+                            <TableHead className="text-xl font-semibold text-center">
+                                Actions
+                            </TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {shared.map((cred) => (
                             <TableRow key={cred.id}>
                                 <TableCell className="text-lg text-center font-medium">
-                                    {cred.id}
+                                    {cred.name}
                                 </TableCell>
                                 <TableCell className="text-lg text-center font-medium">
                                     {cred.credType === "passwords"
@@ -42,7 +46,10 @@ export default function SharedTable({ shared }: { shared: SharedType[] }) {
                                         : "Card"}
                                 </TableCell>
                                 <TableCell className="text-lg text-center font-medium">
-                                    {cred.createdAt.toLocaleString()}
+                                    {cred.createdAt}
+                                </TableCell>
+                                <TableCell className="grid place-items-center">
+                                    <SharedCredActions sharedId={cred.id} />
                                 </TableCell>
                             </TableRow>
                         ))}

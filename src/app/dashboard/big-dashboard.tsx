@@ -1,7 +1,7 @@
 import { SectionIsland } from "./components/section-island"
 import { AccountIsland } from "./components/account-island"
-import { DashboardTable } from "./components/dashboard-table"
-import { CredsTableFilters } from "./components/creds-table-filters"
+import { DashboardTable } from "./components/table/dashboard-table"
+import { CredsFilters } from "./components/creds-filters"
 import { AddCredButton } from "./components/add-cred-button"
 import { AccessSharedCred } from "./components/access-shared-cred"
 import { Suspense } from "react"
@@ -28,7 +28,7 @@ export async function BigDashboard() {
                         <div className="w-full h-20 bg-slate-200 animate-pulse rounded-md" />
                     }
                 >
-                    <CredsTableFilters />
+                    <CredsFilters />
                 </Suspense>
             </div>
             <div className="grow flex flex-col items-end w-full gap-10">

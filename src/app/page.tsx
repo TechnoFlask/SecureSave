@@ -37,7 +37,7 @@ function Hero({ ...props }: React.ComponentProps<"section">) {
                                         className="text-base xl:text-lg cursor-pointer"
                                         size="lg"
                                     >
-                                        Your Credentials
+                                        Get Started
                                     </Button>
                                 </Link>
                             </SignedOut>
@@ -148,7 +148,7 @@ export default function Home() {
     return (
         <div className="container mx-auto min-h-screen">
             <div className="pt-16 xl:pt-48 flex flex-col gap-24 lg:gap-36">
-                <Hero className="" />
+                <Hero />
                 <Features />
                 <ThankYou />
                 <footer className="text-center text-gray-500 py-8 text-sm bg-white flex items-center justify-center gap-10 lg:gap-50">

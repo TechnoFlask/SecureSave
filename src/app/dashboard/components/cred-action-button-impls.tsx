@@ -73,6 +73,7 @@ function CardAction({
 
     return (
         <div>
+            {/* Attach onclick to children */}
             {cloneElement(children, {
                 onClick: (e: any) => {
                     ;(
@@ -385,13 +386,12 @@ export function DeleteCred({ credId }: { credId: string }) {
         const toastId = myToast.loading("Processing....")
         const cred = await deleteCred(master_password, credId)
 
+        myToast.dismiss(toastId)
         if (cred.success === false) {
-            myToast.dismiss(toastId)
             myToast.error("Failed to delete the credential")
             return
         }
 
-        myToast.dismiss(toastId)
         myToast.success("Successfully deleted the credential")
         router.replace("/dashboard")
     }

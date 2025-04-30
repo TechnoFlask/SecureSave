@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { cardFormSchema, passwordFormSchema } from "../schema"
+import { cardFormSchema, passwordFormSchema } from "./schema"
 import { z as zod } from "zod"
 import {
     Form,

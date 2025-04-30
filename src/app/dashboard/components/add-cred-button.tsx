@@ -56,22 +56,20 @@ export function AddCredButton() {
         <>
             {currentSection !== "shared" && (
                 <>
-                    <button>
-                        <Card
-                            className="cursor-pointer max-w-sm"
-                            onClick={() => setIsDialogOpen(true)}
-                        >
-                            <CardContent className="flex justify-center items-center gap-3">
-                                <FaPlus />
-                                <span className="text-xl font-semibold">
-                                    Add{" "}
-                                    {currentSection === "passwords"
-                                        ? "Password"
-                                        : "Card"}
-                                </span>
-                            </CardContent>
-                        </Card>
-                    </button>
+                    <Card
+                        className="cursor-pointer max-w-sm max-lg:py-0.5 max-lg:rounded-sm max-lg:shadow-2xs"
+                        onClick={() => setIsDialogOpen(true)}
+                    >
+                        <CardContent className="max-lg:px-4 flex justify-center items-center gap-3">
+                            <FaPlus />
+                            <span className="text-lg lg:text-xl font-semibold">
+                                Add{" "}
+                                {currentSection === "passwords"
+                                    ? "Password"
+                                    : "Card"}
+                            </span>
+                        </CardContent>
+                    </Card>
                     <AddCredDialog
                         open={isDialogOpen}
                         onOpenChange={setIsDialogOpen}

@@ -23,12 +23,12 @@ import { useCallback, useRef, useState } from "react"
 import { FaSearch, FaCalendarAlt } from "react-icons/fa"
 import { useSectionContext } from "../section-context"
 
-export function CredsTableFilters() {
+export function CredsFilters() {
     const router = useRouter()
     const searchParams = useSearchParams()
     const pathname = usePathname()
     const [date, setDate] = useState<Date | undefined>(new Date())
-    const [range, setRange] = useState("On")
+    const [range, setRange] = useState("None")
     const nameSearchInputRef = useRef<HTMLInputElement>(null)
     const { currentSection } = useSectionContext()
 
@@ -96,6 +96,9 @@ export function CredsTableFilters() {
                                         value={range}
                                         onValueChange={setRange}
                                     >
+                                        <DropdownMenuRadioItem value="None">
+                                            None
+                                        </DropdownMenuRadioItem>
                                         <DropdownMenuRadioItem value="Before">
                                             Before
                                         </DropdownMenuRadioItem>

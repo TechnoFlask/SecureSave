@@ -1,20 +1,11 @@
 import Navbar from "@/components/Navbar"
-import { CardType, PassType, SharedType } from "./types"
-import { CredCards } from "./components/card"
+import { DashboardCards } from "./components/cards/dashboard-cards"
 
-export function SmallDashboard({
-    creds,
-}: {
-    creds: {
-        passwords: PassType[]
-        cards: CardType[]
-        shared: SharedType[]
-    }
-}) {
+export function SmallDashboard() {
     return (
-        <div>
+        <>
             <Navbar />
-            <CredCards creds={creds} />
-        </div>
+            <DashboardCards />
+        </>
     )
 }

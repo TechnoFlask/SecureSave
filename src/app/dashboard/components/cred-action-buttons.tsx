@@ -5,7 +5,7 @@ import {
     ShareCred,
 } from "./cred-action-button-impls"
 
-export function CardActions({
+export function CredActions({
     credId,
     credType,
 }: {

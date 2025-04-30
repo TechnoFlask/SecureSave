@@ -186,3 +186,27 @@ export async function deleteCred(master_password: string, credId: string) {
 
     return await deleteCredById(credId)
 }
+
+export async function deleteSharedCred(
+    sharedId: string,
+    shared_password: string
+) {
+    await checkAuthenticated()
+
+    const res = await getSharedCredById(sharedId)
+    if (res.success === false) return res
+
+    const { enc, iv, salt } = res.data
+
+    const dec = await decryptCred(
+        shared_password,
+        toByteArray(iv),
+        toByteArray(enc),
+        toByteArray(salt)
+    )
+    if (dec.success === false) return dec
+
+    const deleteRes = await deleteSharedCredById(sharedId)
+    if (deleteRes.success === false) return deleteRes
+    return Success("Shared credential deleted successfully")
+}

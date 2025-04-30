@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { CredsTable } from "./creds-table"
 import SharedTable from "./shared-table"
-import { getServerCreds } from "../data-access/queries"
+import { getServerCreds } from "../../data-access/queries"
 
 export async function DashboardTable() {
     const creds = await getServerCreds()
