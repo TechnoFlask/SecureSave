@@ -5,11 +5,19 @@ import { eq } from "drizzle-orm"
 import { drizzle } from "drizzle-orm/vercel-postgres"
 import { cache } from "react"
 import { Failure, Success } from "@/app/dashboard/utils/return-types"
+import { unstable_cacheTag as cacheTag } from "next/cache"
 
 const db = drizzle()
 
 export const getDashboardSharedCreds = cache(async () => {
     const userId = await checkAuthenticated()
+
+    return _getDashboardSharedCreds(userId)
+})
+
+const _getDashboardSharedCreds = async (userId: string) => {
+    "use cache"
+    cacheTag(`shared-creds-${userId}`)
 
     try {
         return Success(
@@ -21,7 +29,7 @@ export const getDashboardSharedCreds = cache(async () => {
                     name: credsTable.name,
                 })
                 .from(shareCredsTable)
-                .where(eq(shareCredsTable.sender, userId!))
+                .where(eq(shareCredsTable.sender, userId))
                 .innerJoin(
                     credsTable,
                     eq(shareCredsTable.credId, credsTable.id)
@@ -34,7 +42,7 @@ export const getDashboardSharedCreds = cache(async () => {
             (e as Error).message
         )
     }
-})
+}
 
 export const getSharedCredById = cache(async (id: string) => {
     await checkAuthenticated()

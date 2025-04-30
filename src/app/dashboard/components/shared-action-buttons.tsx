@@ -16,7 +16,6 @@ import {
 import { Input } from "@/components/ui/input"
 import { useRef } from "react"
 import { deleteSharedCred } from "../actions/cred-actions"
-import { Router } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 function CopySharedId({ sharedId }: { sharedId: string }) {
@@ -57,7 +56,7 @@ function DeleteSharedCred({ sharedId }: { sharedId: string }) {
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle className="text-xl">
-                        Access the shared credential
+                        Delete the shared credential
                     </AlertDialogTitle>
                     <AlertDialogDescription className="hidden" />
                 </AlertDialogHeader>
@@ -84,7 +83,7 @@ function DeleteSharedCred({ sharedId }: { sharedId: string }) {
                             myToast.success(
                                 "Shared credential deleted successfully"
                             )
-                            router.replace("/dashboard")
+                            // router.replace("/dashboard")
                         }}
                     >
                         Delete

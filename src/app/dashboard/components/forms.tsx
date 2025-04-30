@@ -15,7 +15,6 @@ import { Button } from "@/components/ui/button"
 import { useTransition } from "react"
 import { addCred, editCred } from "../actions/cred-actions"
 import { myToast } from "./my-toast"
-import { useRouter } from "next/navigation"
 
 export function PasswordForm({
     closeParentDialog,
@@ -23,7 +22,6 @@ export function PasswordForm({
     closeParentDialog: (setIs: boolean) => void
 }) {
     const [isPending, startTransition] = useTransition()
-    const router = useRouter()
     const form = useForm<zod.infer<typeof passwordFormSchema>>({
         resolver: zodResolver(passwordFormSchema),
         defaultValues: {
@@ -55,7 +53,6 @@ export function PasswordForm({
 
         myToast.dismiss(toastId)
         myToast.success("Successfully created the credential")
-        router.replace("/dashboard")
 
         closeParentDialog(false)
     }
@@ -163,7 +160,6 @@ export function CardForm({
     closeParentDialog: (setIs: boolean) => void
 }) {
     const [isPending, startTransition] = useTransition()
-    const router = useRouter()
     const form = useForm<zod.infer<typeof cardFormSchema>>({
         resolver: zodResolver(cardFormSchema),
         defaultValues: {
@@ -206,7 +202,6 @@ export function CardForm({
 
         myToast.dismiss(toastId)
         myToast.success("Successfully created the credential")
-        router.replace("/dashboard")
         closeParentDialog(false)
     }
 
@@ -361,7 +356,6 @@ export function PasswordUpdateForm({
     credId: string
 }) {
     const [isPending, startTransition] = useTransition()
-    const router = useRouter()
     const form = useForm<zod.infer<typeof editPasswordFormSchema>>({
         resolver: zodResolver(editPasswordFormSchema),
         defaultValues: initialData,
@@ -385,7 +379,6 @@ export function PasswordUpdateForm({
 
         myToast.dismiss(toastId)
         myToast.success("Successfully updated the credential")
-        router.replace("/dashboard")
 
         closeParentDialog(false)
     }
@@ -479,7 +472,6 @@ export function CardUpdateForm({
     credId: string
 }) {
     const [isPending, startTransition] = useTransition()
-    const router = useRouter()
     const form = useForm<zod.infer<typeof editCardFormSchema>>({
         resolver: zodResolver(editCardFormSchema),
         defaultValues: initialData,
@@ -503,7 +495,7 @@ export function CardUpdateForm({
 
         myToast.dismiss(toastId)
         myToast.success("Successfully updated the credential")
-        router.replace("/dashboard")
+
         closeParentDialog(false)
     }
 

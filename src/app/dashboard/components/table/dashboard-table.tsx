@@ -2,9 +2,11 @@ import { Card, CardContent } from "@/components/ui/card"
 import { CredsTable } from "./creds-table"
 import SharedTable from "./shared-table"
 import { getServerCreds } from "../../data-access/queries"
+import { checkAuthenticated } from "@/lib/auth"
 
 export async function DashboardTable() {
     const creds = await getServerCreds()
+    const userId = await checkAuthenticated()
 
     if (creds.success === false) {
         return (

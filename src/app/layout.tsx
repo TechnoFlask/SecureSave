@@ -4,6 +4,7 @@ import "./globals.css"
 import { ClerkProvider } from "@clerk/nextjs"
 import { Toaster } from "sonner"
 import { Analytics } from "@vercel/analytics/next"
+import { Suspense } from "react"
 
 const openSans = Open_Sans({
     weight: ["400"],
@@ -21,24 +22,30 @@ export default function RootLayout({
     children: React.ReactNode
 }>) {
     return (
-        <ClerkProvider>
-            <html lang="en" suppressHydrationWarning className="scroll-smooth">
-                <body className={`${openSans.className} antialiased`}>
-                    {/* <ThemeProvider
+        <Suspense>
+            <ClerkProvider>
+                <html
+                    lang="en"
+                    suppressHydrationWarning
+                    className="scroll-smooth"
+                >
+                    <body className={`${openSans.className} antialiased`}>
+                        {/* <ThemeProvider
                         attribute="class"
                         defaultTheme="light"
                         enableSystem
                         disableTransitionOnChange
                     > */}
-                    {/* <header className="sticky top-0 z-10">
+                        {/* <header className="sticky top-0 z-10">
                             <Navbar />
                         </header> */}
-                    <main>{children}</main>
-                    <Toaster />
-                    <Analytics />
-                    {/* </ThemeProvider> */}
-                </body>
-            </html>
-        </ClerkProvider>
+                        <main>{children}</main>
+                        <Toaster />
+                        <Analytics />
+                        {/* </ThemeProvider> */}
+                    </body>
+                </html>
+            </ClerkProvider>
+        </Suspense>
     )
 }

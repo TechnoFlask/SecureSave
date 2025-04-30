@@ -22,7 +22,6 @@ import {
 } from "@/components/ui/alert-dialog"
 import { FaEdit } from "react-icons/fa"
 import { myToast } from "./my-toast"
-import { useRouter } from "next/navigation"
 import { clipboardWarning } from "./clipboard-warning"
 import { Button } from "@/components/ui/button"
 import { UnEncryptedCardType, UnEncryptedPassType } from "../types"
@@ -278,7 +277,6 @@ export function ShareCred({
     const [cred, setCred] = useState<
         UnEncryptedCardType | UnEncryptedPassType
     >()
-    const router = useRouter()
 
     async function handleSubmit(master_password: string) {
         const toastId = myToast.loading("Processing....")
@@ -366,7 +364,6 @@ export function ShareCred({
                                         { duration: 10000 }
                                     )
                                     setIsTempPassDialogOpen(false)
-                                    router.replace("/dashboard")
                                 }}
                             >
                                 Go
@@ -381,7 +378,6 @@ export function ShareCred({
 }
 
 export function DeleteCred({ credId }: { credId: string }) {
-    const router = useRouter()
     async function handleSubmit(master_password: string) {
         const toastId = myToast.loading("Processing....")
         const cred = await deleteCred(master_password, credId)
@@ -393,7 +389,6 @@ export function DeleteCred({ credId }: { credId: string }) {
         }
 
         myToast.success("Successfully deleted the credential")
-        router.replace("/dashboard")
     }
 
     return (

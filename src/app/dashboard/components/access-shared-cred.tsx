@@ -98,7 +98,7 @@ export function AccessSharedCred() {
                                     "Credential copied to clipboard"
                                 )
                                 // setIsDialogOpen!(false)
-                                router.replace("/dashboard")
+                                // router.replace("/dashboard")
                             }}
                         >
                             Access

@@ -18,6 +18,7 @@ import {
     deleteSharedCredById,
     insertSharedCred,
 } from "@/data-access/shared-creds-access/mutations"
+import { revalidateTag } from "next/cache"
 
 type CredType = "passwords" | "cards"
 
@@ -103,7 +104,7 @@ export async function createSharedCred(
     sharable_password: string,
     recipient_email: string
 ) {
-    await checkAuthenticated()
+    const userId = await checkAuthenticated()
 
     const reEncryptedCred = await encryptCred(
         sharable_password,
@@ -116,7 +117,7 @@ export async function createSharedCred(
     const hashedEmail = await hashString(recipient_email)
     if (hashedEmail.success === false) return hashedEmail
 
-    return await insertSharedCred({
+    const res = await insertSharedCred({
         credType,
         credId,
         iv: fromByteArray(iv),
@@ -124,6 +125,10 @@ export async function createSharedCred(
         salt: fromByteArray(salt),
         recipient: hashedEmail.data as string,
     })
+    if (res.success === false) return res
+
+    revalidateTag(`shared-creds-${userId}`)
+    return Success(res.data)
 }
 
 export async function openSharedCred(
@@ -153,6 +158,7 @@ export async function openSharedCred(
     const deleteRes = await deleteSharedCredById(sharedId)
     if (deleteRes.success === false) return deleteRes
 
+    revalidateTag(`shared-creds-${res.data.sender}`)
     return Success([JSON.parse(dec.data), credType])
 }
 
@@ -162,29 +168,42 @@ export async function addCred(
     credType: CredType,
     name: string
 ) {
-    await checkAuthenticated()
+    const userId = await checkAuthenticated()
 
     const encrypted_values = await encryptCred(master_password, data)
     if (encrypted_values.success === false) return encrypted_values
 
     const { iv, enc, salt } = encrypted_values.data
 
-    return await insertCred({
+    const res = await insertCred({
         credType,
         iv: fromByteArray(iv),
         enc: fromByteArray(enc),
         salt: fromByteArray(salt),
         name,
     })
+    if (res.success === false) return res
+
+    revalidateTag(`${credType}-${userId}`)
+    return Success(res.data)
 }
 
 export async function deleteCred(master_password: string, credId: string) {
-    await checkAuthenticated()
+    const userId = await checkAuthenticated()
 
     const cred = await unlockCred(master_password, credId)
     if (cred.success === false) return cred
 
-    return await deleteCredById(credId)
+    const res = await getCredById(credId)
+    if (res.success === false) return res
+
+    const { credType } = res.data
+
+    const delRes = await deleteCredById(credId)
+    if (delRes.success === false) return delRes
+
+    revalidateTag(`${credType}-${userId}`)
+    return Success(delRes.data)
 }
 
 export async function deleteSharedCred(
@@ -208,5 +227,7 @@ export async function deleteSharedCred(
 
     const deleteRes = await deleteSharedCredById(sharedId)
     if (deleteRes.success === false) return deleteRes
+
+    revalidateTag(`shared-creds-${res.data.sender}`)
     return Success("Shared credential deleted successfully")
 }
