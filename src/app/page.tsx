@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { SignedIn, SignedOut } from "@clerk/nextjs"
 import { Lock, Shield } from "lucide-react"
+import Image from "next/image"
 import Link from "next/link"
 import { Suspense } from "react"
 import { FaGithub } from "react-icons/fa6"
@@ -11,8 +12,10 @@ export const experimental_ppr = true
 function Hero({ ...props }: React.ComponentProps<"section">) {
     return (
         <section {...props}>
-            <div className="flex justify-center items-center xl:gap-3 mb-7 xl:mb-14">
-                <Shield className="h-10 w-10 xl:h-16 xl:w-16 text-accent-foreground" />
+            <div className="flex justify-center items-center gap-2 xl:gap-3 mb-7 xl:mb-14">
+                <div className="h-10 w-10 xl:h-14 xl:w-14 relative">
+                    <Image src="/icon.png" alt="SecureSave Icon" fill />
+                </div>
                 <h1 className="text-3xl xl:text-4xl font-bold">SecureSave</h1>
             </div>
             <div className=" flex flex-col lg:flex-row items-center justify-center p-4 gap-10">
