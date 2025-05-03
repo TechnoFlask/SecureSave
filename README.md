@@ -1,36 +1,25 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SecureSave 🔐
 
-## Getting Started
+A zero-knowledge credential manager – securely create, manage, and share credentials with full user control and encryption.
 
-First, run the development server:
+## Overview
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+SecureSave is a zero-knowledge credential manager built with Next.js and TypeScript, offering secure client-side encrypted storage for managing sensitive credentials. It supports full credential lifecycle operations—create, edit, delete, and copy to clipboard—along with secure sharing capabilities. Shared credentials are protected with OTP based two-factor authentication on the recipient’s end. Authentication and authorization are handled via Clerk, providing secure session management. The application features a clean, responsive interface built with modern UI practices to ensure both security and usability.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+<!-- ![Preview of the app](preview.jpg "CertifyPro") -->
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Zero-Knowledge Security:** Credentials are encrypted client-side, with the server never having access to your data.
 
-## Learn More
+- **Master Password Protection:** – Every operation, including creating, editing, copying, deleting and sharing credentials, requires your master password for added security.
 
-To learn more about Next.js, take a look at the following resources:
+- **Secure Sharing** – Share credentials with others, with OTP based 2FA and an agreed upon temporary password required for access by the recipient.
 
--   [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
--   [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Secure Authentication** – Provides secure authentication, authorization powered by Clerk for a seamless user experience.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Simple and Responsive UI** – A clean, user-friendly interface optimized for all devices.
 
-## Deploy on Vercel
+## Tech Stack
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+![My Skills](https://skillicons.dev/icons?i=nextjs,react,ts,tailwind,postgres,redis)
